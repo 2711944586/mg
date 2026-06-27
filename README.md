@@ -30,7 +30,13 @@ classic-reading-project/
     │   ├── ai-video-poster.svg
     │   ├── group-photo-1.svg
     │   ├── group-photo-2.svg
-    │   └── group-photo-3.svg
+    │   ├── group-photo-3.svg
+    │   └── photos/
+    │       ├── CREDITS.md
+    │       ├── reading-library.jpg
+    │       ├── jiangxi-village.jpg
+    │       ├── high-speed-rail.jpg
+    │       └── golmud-solar.jpg
     └── src/
         ├── App.tsx
         ├── main.tsx
@@ -84,15 +90,15 @@ https://2711944586.github.io/mg/
 - 上一页/下一页：点击按钮，或按键盘左右方向键。
 - 分镜跳转：点击底部进度条，可快速跳到对应章节。
 
-7个自动分镜：
+5个自动分镜：
 
-1. 开卷：从书页进入时代。
-2. 主线：理论在回答中国问题中发展。
-3. 两个结合：理论扎根中国的两条路径。
-4. 现实：每个理论点都要照进现实。
-5. 小组阅读：经典阅读不是背概念。
-6. 数字化：从文本到数字展映。
-7. 合卷：在经典中坚定方向，在实践中增长本领。
+1. 开卷：为什么读这篇经典。
+2. 根脉：两个结合让理论扎根中国。
+3. 道路：中国式现代化不是照搬模式。
+4. 回答：理论要回答现实问题。
+5. 合卷：青年如何把阅读变成行动。
+
+新版演示使用了真实图片素材，存放在 `WebDemo/public/photos/`，来源说明见 `WebDemo/public/photos/CREDITS.md`。
 
 ---
 
@@ -206,6 +212,6 @@ WebDemo/public/ai-video.mp4
 - PPTX：已生成 `守正创新经典品读汇报.pptx`，共12页。
 - 讲稿：按12页分段，口语化表达，适合自然偏快语速；已生成 `汇报讲稿.docx`。
 - 活动总结：包含学习、交流、讨论、成果制作、反思全过程，并预留3张照片说明。
-- WebDemo：已升级为红色动态视频背景的自动翻书演示，包含7个分镜、自动播放、手动控场和 GitHub Pages 静态部署。
+- WebDemo：已升级为红色动态视频背景的自动翻书演示，包含5个核心分镜、真实图片素材、自动播放、手动控场和 GitHub Pages 静态部署。
 - AI视频脚本：时长58秒，包含旁白、字幕、画面和音乐建议。
 - 素材清单：覆盖 PPT、WebDemo、AI视频和版权注意事项。
