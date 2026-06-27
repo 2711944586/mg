@@ -1,0 +1,10 @@
+WebDemo/node_modules/
+WebDemo/dist/
+WebDemo/.playwright-cli/
+WebDemo/*.log
+WebDemo/*.err
+outputs/
+.cache/
+artifact-build-manifest.json
+*.tmp
+~$*

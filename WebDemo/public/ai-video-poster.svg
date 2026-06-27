@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">AI视频占位封面</title>
+  <desc id="desc">书页、时间轴、城市、乡村和青年学习场景组成的课堂展示封面。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#4d1617"/>
+      <stop offset="55%" stop-color="#7a171a"/>
+      <stop offset="100%" stop-color="#3d2a1f"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" x2="1">
+      <stop offset="0%" stop-color="#fff7e8"/>
+      <stop offset="100%" stop-color="#ead6b7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <path d="M0 520 C240 430 356 600 560 510 C740 430 890 455 1280 320 L1280 720 L0 720 Z" fill="#496b55" opacity="0.56"/>
+  <path d="M110 600 C300 500 425 610 610 540 C810 465 990 505 1210 390" fill="none" stroke="#d9b15d" stroke-width="6" opacity="0.5"/>
+  <g transform="translate(245 160)">
+    <path d="M20 55 C155 5 265 25 385 95 L385 420 C250 350 135 334 20 390 Z" fill="url(#paper)"/>
+    <path d="M385 95 C505 25 615 5 750 55 L750 390 C630 334 520 350 385 420 Z" fill="#f6e7cf"/>
+    <path d="M385 95 L385 420" stroke="#b88a35" stroke-width="4"/>
+    <path d="M80 145 L315 108 M80 205 L315 170 M80 265 L315 235" stroke="#9b2022" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+    <path d="M455 135 L690 98 M455 196 L690 165 M455 260 L645 230" stroke="#5d1214" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+  </g>
+  <g fill="#fff8ec" font-family="Microsoft YaHei, Arial, sans-serif" text-anchor="middle">
+    <text x="640" y="92" font-size="46" font-weight="700">让理论之光照亮青春之路</text>
+    <text x="640" y="640" font-size="28">在经典中坚定方向，在实践中增长本领</text>
+  </g>
+  <circle cx="640" cy="362" r="58" fill="#fff8ec" opacity="0.92"/>
+  <path d="M625 330 L625 394 L678 362 Z" fill="#7a171a"/>
+</svg>
+
