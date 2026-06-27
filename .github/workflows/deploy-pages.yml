@@ -33,9 +33,6 @@ jobs:
         working-directory: WebDemo
         run: npm ci
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
       - name: Build WebDemo
         working-directory: WebDemo
         run: npm run build
