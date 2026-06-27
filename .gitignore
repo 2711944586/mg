@@ -1,6 +1,7 @@
 WebDemo/node_modules/
 WebDemo/dist/
 WebDemo/.playwright-cli/
+WebDemo/output/
 WebDemo/*.log
 WebDemo/*.err
 outputs/
