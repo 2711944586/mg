@@ -2,7 +2,7 @@
 
 项目名称：**守正创新何以开辟新境界——《开辟马克思主义中国化时代化新境界》经典品读汇报**
 
-本成果包围绕《开辟马克思主义中国化时代化新境界》展开，结合毛概课程中的马克思主义中国化时代化、“两个结合”、实事求是、群众路线、独立自主、中国式现代化等知识点，形成 PPT 文案、10分30秒汇报讲稿、活动总结、WebDemo、AI视频脚本和素材清单。
+本成果包围绕《开辟马克思主义中国化时代化新境界》展开，结合毛概课程中的马克思主义中国化时代化、“两个结合”、实事求是、群众路线、独立自主、中国式现代化等知识点，形成PPT文案、10分30秒汇报讲稿、活动总结、WebDemo、主题短片脚本和素材清单。
 
 ---
 
@@ -21,8 +21,6 @@ classic-reading-project/
 └── WebDemo/
     ├── package.json
     ├── index.html
-    ├── tsconfig.json
-    ├── tsconfig.node.json
     ├── vite.config.ts
     ├── public/
     │   ├── reading-hero.png
@@ -33,14 +31,15 @@ classic-reading-project/
     │   ├── group-photo-3.svg
     │   └── photos/
     │       ├── CREDITS.md
-    │       ├── chinese-books-library.jpg
-    │       ├── china-science-museum.jpg
+    │       ├── national-library-reading-room.jpg
+    │       ├── national-library-hall.jpg
+    │       ├── ten-bamboo-page.jpg
     │       ├── forbidden-city.jpg
-    │       ├── lishui-village.jpg
-    │       ├── reading-library.jpg
+    │       ├── wuyuan-village.jpg
+    │       ├── fast-telescope.jpg
     │       ├── jiangxi-village.jpg
-    │       ├── high-speed-rail.jpg
-    │       └── golmud-solar.jpg
+    │       ├── saihanba-forest.jpg
+    │       └── high-speed-rail.jpg
     └── src/
         ├── App.tsx
         ├── main.tsx
@@ -51,7 +50,7 @@ classic-reading-project/
 
 ## 2. 如何运行 WebDemo
 
-进入 WebDemo 目录：
+进入WebDemo目录：
 
 ```bash
 cd WebDemo
@@ -65,13 +64,13 @@ npm run dev
 http://127.0.0.1:5173/
 ```
 
-如需检查构建是否正常：
+检查构建：
 
 ```bash
 npm run build
 ```
 
-当前 WebDemo 已适配 GitHub Pages 子路径 `/mg/`，可静态部署到：
+当前WebDemo已适配GitHub Pages子路径 `/mg/`，线上地址为：
 
 ```text
 https://2711944586.github.io/mg/
@@ -81,38 +80,32 @@ https://2711944586.github.io/mg/
 
 ## 3. WebDemo 自动演示方式
 
-新版 WebDemo 已升级为**自动翻书演示版**：打开页面后会自动播放红色动态视频背景，并按照分镜自动翻阅书籍页面。它不是普通网页，而是用于课堂投屏的“PPT总结演示”：左页讲论证链，右页展示真实图片、时间轴、案例拼贴、线下讨论照片预留区和最终总结。课堂投屏时建议直接全屏打开：
+WebDemo现在是课堂投屏用的**自动翻书总结演示**。打开页面后，红色动态背景会持续播放，主体以左右书页、书脊、纸张厚度、翻页阴影和进度条推进整套汇报逻辑。
 
-```text
-https://2711944586.github.io/mg/
-```
+9个章节对应12页PPT：
+
+1. 开卷：从一个问题翻开经典，对应PPT 1-2。
+2. 主线：理论在回答中国问题中生长，对应PPT 3。
+3. 方法：守正创新不是两选一，对应PPT 4。
+4. 根脉：两个结合让理论扎根中国，对应PPT 5-6。
+5. 现实：问题导向让理论进入现场，对应PPT 7。
+6. 共读：把讨论留在真实现场，对应PPT 8。
+7. 展厅：数字展厅服务思想表达，对应PPT 9-10。
+8. 青年：从理论自觉到实践担当，对应PPT 11。
+9. 合卷：用三句话收束整套汇报，对应PPT 12。
 
 演示控制：
 
-- 自动播放：默认每约7秒翻到下一页。
-- 暂停/继续：点击“暂停演示/继续演示”，或按空格键。
-- 上一页/下一页：点击按钮，或按键盘左右方向键。
-- 分镜跳转：点击底部进度条，可快速跳到对应章节。
-
-9个自动分镜，完整对应12页PPT逻辑：
-
-1. 开卷：从一个主问题进入经典，对应PPT 1-2。
-2. 主线：从毛概看理论发展的脉络，对应PPT 3。
-3. 方法：守正创新不是两选一，对应PPT 4。
-4. 根脉：两个结合让理论扎根中国，对应PPT 5-6。
-5. 现实：问题导向把理论带入现实，对应PPT 7。
-6. 共读：线下讨论照片预留区，对应PPT 8。
-7. 展厅：数字化成果服务经典品读，对应PPT 9-10。
-8. 青年：从理论自觉到实践担当，对应PPT 11。
-9. 合卷：用三句话总结整套PPT，对应PPT 12。
-
-新版演示使用了多张真实图片素材，存放在 `WebDemo/public/photos/`，来源说明见 `WebDemo/public/photos/CREDITS.md`。
+- 默认自动播放，每章约10.8秒。
+- 点击“停留/继续”或按空格键可控制播放。
+- 点击“上一章/下一章”或按键盘左右方向键可切换。
+- 底部进度条可跳转章节。
 
 ---
 
 ## 4. 如何彩排10分30秒汇报
 
-PPT 共12页，建议按以下时间控制：
+PPT共12页，建议按以下时间控制：
 
 | 页码 | 内容 | 时间 |
 |---|---|---:|
@@ -125,25 +118,25 @@ PPT 共12页，建议按以下时间控制：
 | 7 | 问题导向与现实案例 | 70秒 |
 | 8 | 小组阅读过程 | 50秒 |
 | 9 | WebDemo展示 | 60秒 |
-| 10 | AI视频展示 | 40秒 |
+| 10 | 主题短片展示 | 40秒 |
 | 11 | 青年落脚 | 55秒 |
 | 12 | 总结 | 40秒 |
 | 合计 |  | 630秒 |
 
 彩排建议：
 
-- 第3、5、7页信息较密，讲述时只选关键例子，不临时扩展太多内容。
-- WebDemo展示控制在1分钟左右，建议让自动翻书播放1—2页，再手动跳到“两个结合”或“现实”分镜配合讲述。
-- 最后一页结束语放慢语速，增强收束感。
-- 正式汇报前至少完整计时两遍，第一遍看是否超时，第二遍调整停顿和过渡。
+- 第3、5、7页信息较密，只讲关键例子，不临时扩展。
+- 第9页展示WebDemo时，建议让自动翻书播放一章，再手动跳到“现实”或“合卷”分镜。
+- 第12页最后一句放慢语速，增强收束感。
+- 正式汇报前完整计时两遍，第一遍看是否超时，第二遍调整停顿和过渡。
 
 ---
 
-## 5. 如何替换小组照片和AI视频
+## 5. 如何替换小组照片和主题短片
 
-### 替换照片
+### 替换线下讨论照片
 
-当前 WebDemo 为线下讨论专门预留了3个照片位。页面会优先读取真实照片：
+WebDemo会优先读取以下小组自摄照片：
 
 ```text
 WebDemo/public/group-photo-1.jpg
@@ -151,54 +144,29 @@ WebDemo/public/group-photo-2.jpg
 WebDemo/public/group-photo-3.jpg
 ```
 
-如果真实照片尚未提供，会自动退回到3张 SVG 占位图：
+建议照片内容：
 
-```text
-WebDemo/public/group-photo-1.svg
-WebDemo/public/group-photo-2.svg
-WebDemo/public/group-photo-3.svg
-```
+- `group-photo-1.jpg`：读原文，经典文献精读。
+- `group-photo-2.jpg`：辨问题，小组交流讨论。
+- `group-photo-3.jpg`：定表达，成果打磨和彩排。
 
-因此后续替换时，只要把你提供的线下讨论图片改名为以上3个 `.jpg` 文件并放进 `WebDemo/public/`，不需要改代码。
+如果还没有放入照片，页面会使用同名主题插画维持正式版面。
 
-建议照片内容对应：
+### 替换主题短片
 
-- 照片1：小组成员进行经典文献精读。
-- 照片2：小组成员开展交流讨论。
-- 照片3：小组成员完善PPT、WebDemo或AI视频脚本。
-
-### 替换AI视频
-
-当前视频区使用 `WebDemo/public/ai-video-poster.svg` 作为占位封面。正式视频完成后，可放入：
+当前第七章使用 `WebDemo/public/ai-video-poster.svg` 作为主题短片封面。正式短片完成后，可放入：
 
 ```text
 WebDemo/public/ai-video.mp4
 ```
 
-随后将 `App.tsx` 中的视频占位区域改成 `<video controls>` 即可。AI视频脚本与分镜见 `AI视频脚本与分镜.md`。
+再把 `App.tsx` 中的封面图区域替换为视频标签即可。短片分镜见 `AI视频脚本与分镜.md`。
 
 ---
 
-## 6. 最终提交材料清单
+## 6. GitHub Actions 静态部署
 
-建议提交以下材料：
-
-- `守正创新经典品读汇报.pptx`：可编辑正式PPT。
-- `汇报讲稿.docx`：Word版汇报讲稿。
-- `PPT大纲与逐页文案.md` 或据此制作的正式 PPT 文件。
-- `汇报讲稿.md`。
-- `经典品读活动总结.md`。
-- `AI视频脚本与分镜.md`。
-- `素材清单.md`。
-- `WebDemo/` 完整目录。
-- 小组真实活动照片3张。
-- 如已制作，附 AI 视频文件或视频链接。
-
----
-
-## 7. GitHub Actions 静态部署
-
-仓库已包含 GitHub Pages 工作流：
+仓库已包含GitHub Pages工作流：
 
 ```text
 .github/workflows/deploy-pages.yml
@@ -206,24 +174,37 @@ WebDemo/public/ai-video.mp4
 
 工作流会在 `main` 分支 push 后自动执行：
 
-1. 安装 `WebDemo` 依赖。
+1. 安装WebDemo依赖。
 2. 执行 `npm run build`。
 3. 上传 `WebDemo/dist`。
-4. 使用 GitHub Pages 发布。
+4. 使用GitHub Pages发布。
 
-首次部署前，请在 GitHub 仓库设置中确认：
+首次部署前，请在GitHub仓库设置中确认：
 
 - `Settings` → `Pages`
 - `Build and deployment` → `Source` 选择 `GitHub Actions`
 
 ---
 
+## 7. 最终提交材料清单
+
+- `守正创新经典品读汇报.pptx`：可编辑正式PPT。
+- `汇报讲稿.docx`：Word版汇报讲稿。
+- `PPT大纲与逐页文案.md`：逐页文案与设计说明。
+- `汇报讲稿.md`：10分30秒口语稿。
+- `经典品读活动总结.md`：活动总结与照片说明。
+- `AI视频脚本与分镜.md`：主题短片脚本。
+- `素材清单.md`：PPT、WebDemo、短片素材说明。
+- `WebDemo/`：可本地运行、可静态部署的自动翻书演示。
+- 小组真实活动照片3张。
+- 如已制作，附主题短片文件或视频链接。
+
+---
+
 ## 8. 自检结果
 
-- PPT：12页，逻辑为“经典出发—毛概进入—文本展开—现实验证—青年落脚”，符合10分30秒汇报。
-- PPTX：已生成 `守正创新经典品读汇报.pptx`，共12页。
-- 讲稿：按12页分段，口语化表达，适合自然偏快语速；已生成 `汇报讲稿.docx`。
-- 活动总结：包含学习、交流、讨论、成果制作、反思全过程，并预留3张照片说明。
-- WebDemo：已升级为红色动态视频背景的自动翻书演示，包含9个核心分镜、真实图片素材、PPT页码映射、线下讨论照片预留区、自动播放、手动控场和 GitHub Pages 静态部署。
-- AI视频脚本：时长58秒，包含旁白、字幕、画面和音乐建议。
-- 素材清单：覆盖 PPT、WebDemo、AI视频和版权注意事项。
+- PPT：12页，逻辑为“经典出发-毛概进入-文本展开-现实验证-青年落脚”。
+- 讲稿：按12页分段，口语化表达，适合10分30秒汇报。
+- WebDemo：红色动态背景、自动翻书、真实图片、九章总结、线下讨论影像接口、静态部署适配。
+- 主题短片：时长45-60秒，承接“从书页到时代场景，从经典阅读到青年担当”。
+- 素材：真实图片来源已记录在 `WebDemo/public/photos/CREDITS.md`。

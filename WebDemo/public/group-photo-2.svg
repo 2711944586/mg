@@ -1,12 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
-  <title id="title">小组讨论照片占位</title>
-  <desc id="desc">用于替换为小组成员开展交流讨论的真实照片。</desc>
+  <title id="title">小组交流讨论</title>
+  <desc id="desc">小组成员围绕理论问题展开讨论的画面。</desc>
   <rect width="800" height="600" fill="#efe0c9"/>
   <rect x="110" y="95" width="580" height="330" rx="8" fill="#fffaf1" stroke="#7a171a" stroke-width="5"/>
   <path d="M190 175 H615 M190 240 H520 M190 305 H580" stroke="#b88a35" stroke-width="12" stroke-linecap="round"/>
   <path d="M210 405 C260 350 330 350 382 405 M418 405 C470 350 540 350 590 405" fill="none" stroke="#496b55" stroke-width="20" stroke-linecap="round"/>
   <circle cx="295" cy="360" r="42" fill="#5d1214"/>
   <circle cx="505" cy="360" r="42" fill="#3d2a1f"/>
-  <text x="400" y="535" text-anchor="middle" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" fill="#5d1214" font-weight="700">照片2：交流讨论</text>
+  <text x="400" y="535" text-anchor="middle" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" fill="#5d1214" font-weight="700">辨问题：交流讨论</text>
 </svg>
-

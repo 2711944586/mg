@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
-  <title id="title">小组精读照片占位</title>
-  <desc id="desc">用于替换为小组成员进行经典文献精读的真实照片。</desc>
+  <title id="title">经典文献精读</title>
+  <desc id="desc">小组成员围绕经典文献进行精读的画面。</desc>
   <rect width="800" height="600" fill="#f3eadb"/>
   <rect x="80" y="90" width="640" height="390" rx="8" fill="#fffaf1" stroke="#c9a76a" stroke-width="4"/>
   <path d="M170 180 H380 M170 235 H410 M170 290 H340" stroke="#7a171a" stroke-width="16" stroke-linecap="round" opacity="0.62"/>
@@ -8,6 +8,5 @@
   <circle cx="250" cy="430" r="42" fill="#7a171a"/>
   <circle cx="390" cy="430" r="42" fill="#b88a35"/>
   <circle cx="530" cy="430" r="42" fill="#496b55"/>
-  <text x="400" y="535" text-anchor="middle" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" fill="#5d1214" font-weight="700">照片1：经典文献精读</text>
+  <text x="400" y="535" text-anchor="middle" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" fill="#5d1214" font-weight="700">读原文：经典文献精读</text>
 </svg>
-

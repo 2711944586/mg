@@ -5,6 +5,7 @@ type ImageVisual = {
   image: string;
   imageAlt: string;
   caption: string;
+  variant?: 'portrait' | 'wide';
 };
 
 type TimelineVisual = {
@@ -16,12 +17,13 @@ type TimelineVisual = {
   }>;
 };
 
-type TwoCombineVisual = {
-  type: 'two-combine';
+type DiptychVisual = {
+  type: 'diptych';
   images: Array<{
     src: string;
     alt: string;
     label: string;
+    note: string;
   }>;
 };
 
@@ -45,8 +47,8 @@ type DiscussionVisual = {
   }>;
 };
 
-type DigitalVisual = {
-  type: 'digital';
+type StudioVisual = {
+  type: 'studio';
   modules: Array<{
     title: string;
     note: string;
@@ -55,66 +57,72 @@ type DigitalVisual = {
 
 type SummaryVisual = {
   type: 'summary';
-  points: string[];
+  points: Array<{
+    title: string;
+    note: string;
+  }>;
 };
 
 type SceneVisual =
   | ImageVisual
   | TimelineVisual
-  | TwoCombineVisual
+  | DiptychVisual
   | CasesVisual
   | DiscussionVisual
-  | DigitalVisual
+  | StudioVisual
   | SummaryVisual;
 
 type Scene = {
   chapter: string;
-  pptMap: string;
+  slideRange: string;
   title: string;
   thesis: string;
   proof: string[];
   takeaway: string;
   tags: string[];
   cue: string;
+  turnImage: string;
   visual: SceneVisual;
 };
 
-const sceneDuration = 9200;
+const sceneDuration = 10800;
 
 const scenes: Scene[] = [
   {
-    chapter: '01 开卷',
-    pptMap: 'PPT 1-2',
-    title: '从一个主问题进入经典',
-    thesis: '为什么马克思主义必须中国化时代化，青年怎样把经典阅读变成理解时代的能力。',
+    chapter: '第一章',
+    slideRange: '开卷 · 第1-2页',
+    title: '从一个问题翻开经典',
+    thesis: '为什么马克思主义必须中国化时代化，青年又怎样把经典阅读转化为理解时代的能力。',
     proof: [
-      '选题不是复述文章，而是把经典文本放回毛概课程主线中理解。',
-      '整场汇报围绕时代之问、理论之答、青年之责展开。',
-      '第一幕完成开场和选题原因，给后面的理论链条定方向。',
+      '这次品读从课程主线出发，把文献放回“马克思主义中国化时代化”的历史脉络中理解。',
+      '我们不把经典当作结论清单，而是围绕时代之问、理论之答、青年之责建立论证。',
+      '开场只保留一个核心追问，让后面的守正创新、两个结合和现实案例自然展开。',
     ],
-    takeaway: '经典阅读的起点，是带着现实问题走进文本。',
-    tags: ['经典文本', '毛概课程', '核心问题'],
-    cue: '开场只抓一个主问题：这篇文献怎样帮助我们理解中国化时代化，也怎样回应大学生自己的成长问题。',
+    takeaway: '带着现实问题进入文本，经典才会真正发声。',
+    tags: ['核心问题', '经典品读', '青年视角'],
+    cue: '一场好的经典品读，起点不是背诵，而是把问题问准。',
+    turnImage: 'photos/national-library-reading-room.jpg',
     visual: {
       type: 'image',
-      image: 'photos/reading-library.jpg',
-      imageAlt: '学生在图书馆阅读资料',
-      caption: '从文本出发：带着问题阅读经典',
+      image: 'photos/national-library-reading-room.jpg',
+      imageAlt: '中国国家图书馆阅览室',
+      caption: '从静心阅读开始，把问题带进文本',
     },
   },
   {
-    chapter: '02 主线',
-    pptMap: 'PPT 3',
-    title: '从毛概看理论发展的脉络',
+    chapter: '第二章',
+    slideRange: '主线 · 第3页',
+    title: '理论在回答中国问题中生长',
     thesis: '马克思主义中国化时代化不是孤立概念，而是贯穿革命、建设、改革和新时代的理论主线。',
     proof: [
       '毛泽东思想回答中国革命和建设中的道路问题。',
-      '中国特色社会主义理论体系回答改革开放和现代化建设问题。',
-      '习近平新时代中国特色社会主义思想回答新时代坚持和发展中国特色社会主义的重大课题。',
+      '中国特色社会主义理论体系回答改革开放和社会主义现代化建设问题。',
+      '习近平新时代中国特色社会主义思想回答新时代坚持和发展中国特色社会主义的重大时代课题。',
     ],
-    takeaway: '理论总是在回答中国问题、时代问题、人民问题中发展。',
-    tags: ['理论脉络', '中国化时代化', '时代课题'],
-    cue: '这一页把 PPT 第3页压缩成一条时间线，说明理论不是静态概念，而是在实践中不断展开。',
+    takeaway: '理论从来不是静止的，它在实践中获得新的表达。',
+    tags: ['理论脉络', '时代课题', '实践发展'],
+    cue: '把文献放进毛概主线里看，才能看见“为什么必须不断推进”。',
+    turnImage: 'photos/ten-bamboo-page.jpg',
     visual: {
       type: 'timeline',
       nodes: [
@@ -127,59 +135,63 @@ const scenes: Scene[] = [
     },
   },
   {
-    chapter: '03 方法',
-    pptMap: 'PPT 4',
+    chapter: '第三章',
+    slideRange: '方法 · 第4页',
     title: '守正创新不是两选一',
-    thesis: '守正保证方向，创新回应问题，二者统一在马克思主义的实践品格之中。',
+    thesis: '守正保证根本方向，创新回应新的问题，二者统一在马克思主义鲜明的实践品格之中。',
     proof: [
-      '守正是坚持基本立场、观点、方法，尤其是人民立场和实事求是。',
-      '创新是回应中国之问、世界之问、人民之问、时代之问。',
-      '只讲守正容易停在过去，只讲创新又可能失去根本方向。',
+      '守正，是坚持马克思主义基本立场、观点、方法，坚持人民立场和实事求是。',
+      '创新，是回应中国之问、世界之问、人民之问、时代之问。',
+      '只讲守正容易停在过去，只讲创新又可能失去根基；二者统一，理论才有生命力。',
     ],
     takeaway: '守正不是守旧，创新不是离根。',
     tags: ['守正创新', '实事求是', '人民立场'],
-    cue: '这里对应 PPT 第4页，是全篇的方法论中心：方向不能丢，问题也不能绕开。',
+    cue: '这一章回答方法问题：方向不能丢，问题也不能绕开。',
+    turnImage: 'photos/ten-bamboo-page.jpg',
     visual: {
       type: 'image',
-      image: 'photos/chinese-books-library.jpg',
-      imageAlt: '中文书架上的书籍',
-      caption: '方法意识：从概念记忆走向问题分析',
+      image: 'photos/ten-bamboo-page.jpg',
+      imageAlt: '十竹斋书画谱古籍书页',
+      caption: '在根脉中守正，在时代中创新',
     },
   },
   {
-    chapter: '04 根脉',
-    pptMap: 'PPT 5-6',
+    chapter: '第四章',
+    slideRange: '根脉 · 第5-6页',
     title: '两个结合让理论扎根中国',
     thesis: '同中国具体实际相结合，解决理论如何不悬空；同中华优秀传统文化相结合，解决理论如何有根脉。',
     proof: [
       '第一个结合强调从中国国情出发，不能照搬外来模式。',
-      '第二个结合强调中华文明土壤，推动传统文化创造性转化。',
-      '两个结合共同说明，科学理论要有实践根基，也要有文化根脉。',
+      '第二个结合强调中华文明土壤，推动传统文化创造性转化、创新性发展。',
+      '两个结合共同说明，科学理论既要回应实践，也要获得文化生命。',
     ],
     takeaway: '理论扎根中国，才能真正回应中国。',
     tags: ['中国具体实际', '中华优秀传统文化', '文化自信'],
-    cue: '这一幕把 PPT 第5页和第6页合在一起，用乡村与传统建筑两类真实图像呈现“实际”和“文化”。',
+    cue: '实际与文化不是背景板，而是理论创新能够落地生根的两条根系。',
+    turnImage: 'photos/forbidden-city.jpg',
     visual: {
-      type: 'two-combine',
+      type: 'diptych',
       images: [
         {
-          src: 'photos/lishui-village.jpg',
-          alt: '浙江丽水乡村建筑',
+          src: 'photos/wuyuan-village.jpg',
+          alt: '江西婺源传统村落',
           label: '中国具体实际',
+          note: '从国情与人民生活出发',
         },
         {
           src: 'photos/forbidden-city.jpg',
-          alt: '故宫建筑',
+          alt: '故宫宫殿建筑',
           label: '中华文化根脉',
+          note: '在文明土壤中创造转化',
         },
       ],
     },
   },
   {
-    chapter: '05 现实',
-    pptMap: 'PPT 7',
-    title: '问题导向把理论带入现实',
-    thesis: '理论创新的价值，不在于堆出抽象词语，而在于解释现实、回应现实、指导现实。',
+    chapter: '第五章',
+    slideRange: '现实 · 第7页',
+    title: '问题导向让理论进入现实',
+    thesis: '理论创新的价值，不在于堆砌抽象词语，而在于解释现实、回应现实、指导现实。',
     proof: [
       '科技自立自强回应全球科技竞争和新质生产力发展。',
       '乡村振兴回应发展不平衡和共同富裕的现实课题。',
@@ -187,102 +199,105 @@ const scenes: Scene[] = [
     ],
     takeaway: '现实问题在哪里，理论生命力就要体现在哪里。',
     tags: ['新质生产力', '乡村振兴', '生态文明', '中国式现代化'],
-    cue: '这页是全场案例页，四个画面分别对应科技、乡村、生态和现代化道路，避免只讲概念。',
+    cue: '这一页把抽象论述落回看得见的中国现场。',
+    turnImage: 'photos/fast-telescope.jpg',
     visual: {
       type: 'cases',
       cases: [
         {
           title: '科技自立自强',
           theory: '时代化与新质生产力',
-          image: 'photos/china-science-museum.jpg',
-          alt: '中国科技馆互动展区',
+          image: 'photos/fast-telescope.jpg',
+          alt: '中国FAST射电望远镜',
         },
         {
           title: '乡村振兴',
           theory: '中国实际与共同富裕',
-          image: 'photos/lishui-village.jpg',
-          alt: '浙江乡村建筑',
+          image: 'photos/jiangxi-village.jpg',
+          alt: '江西传统村落',
         },
         {
           title: '绿色发展',
           theory: '生态文明与现代化',
-          image: 'photos/golmud-solar.jpg',
-          alt: '青海格尔木光伏项目',
+          image: 'photos/saihanba-forest.jpg',
+          alt: '塞罕坝国家森林公园',
         },
         {
           title: '交通强国',
           theory: '独立自主与道路选择',
           image: 'photos/high-speed-rail.jpg',
-          alt: '上海高速铁路列车',
+          alt: '高铁列车停靠站台',
         },
       ],
     },
   },
   {
-    chapter: '06 共读',
-    pptMap: 'PPT 8',
-    title: '线下讨论照片预留区',
-    thesis: '这一页专门留给小组真实活动照片，用来证明经典品读不是临时拼材料，而是经历了阅读、讨论、打磨的过程。',
+    chapter: '第六章',
+    slideRange: '共读 · 第8页',
+    title: '把讨论留在真实现场',
+    thesis: '经典品读不是临时拼接材料，而是经历阅读、辨析、取舍和共同表达的过程。',
     proof: [
-      '精读文本：圈画“守正创新”“两个结合”“问题导向”等关键词。',
-      '关联毛概：把文本内容和课程知识点一一对应。',
-      '交流讨论：围绕中国化时代化、青年担当和现实案例形成共同观点。',
+      '精读文本，圈画“守正创新”“两个结合”“问题导向”等关键词。',
+      '关联毛概，把文本内容与课程知识点一一对应。',
+      '交流讨论，围绕中国化时代化、青年担当和现实案例形成共同观点。',
     ],
-    takeaway: '后续把你提供的线下讨论图片替换进三个照片位即可。',
-    tags: ['精读文本', '小组讨论', '成果打磨'],
-    cue: '这是新增的预留板块。等你给出小组照片后，只需要替换三个文件名，WebDemo 就能呈现真实活动过程。',
+    takeaway: '共读让文本从个人理解走向共同表达。',
+    tags: ['精读文本', '线下讨论', '成果打磨'],
+    cue: '这一章为小组真实活动留下位置，让汇报有过程、有现场。',
+    turnImage: 'photos/national-library-hall.jpg',
     visual: {
       type: 'discussion',
       slots: [
         {
           image: 'group-photo-1.jpg',
           fallback: 'group-photo-1.svg',
-          title: '精读文本',
-          note: '小组成员圈画关键词和原文要点',
+          title: '读原文',
+          note: '从关键词圈画进入文献结构',
         },
         {
           image: 'group-photo-2.jpg',
           fallback: 'group-photo-2.svg',
-          title: '线下讨论',
-          note: '围绕两个结合和现实案例交换观点',
+          title: '辨问题',
+          note: '围绕两个结合和现实案例交换判断',
         },
         {
           image: 'group-photo-3.jpg',
           fallback: 'group-photo-3.svg',
-          title: '成果打磨',
-          note: '共同修改 PPT、讲稿、WebDemo 和视频脚本',
+          title: '定表达',
+          note: '把观点整理成演示、讲稿和短片',
         },
       ],
     },
   },
   {
-    chapter: '07 展厅',
-    pptMap: 'PPT 9-10',
-    title: '数字化成果服务经典品读',
-    thesis: 'WebDemo 和 AI 视频不是炫技，而是把抽象理论变成可看、可点、可演示的学习空间。',
+    chapter: '第七章',
+    slideRange: '展厅 · 第9-10页',
+    title: '数字展厅服务思想表达',
+    thesis: '网页演示和主题短片不是装饰，而是把抽象理论转化为可观看、可停留、可复盘的学习路径。',
     proof: [
-      'WebDemo 用自动翻书串起经典导读、理论时间轴、现实案例和总结。',
-      'AI 视频脚本把书页、关键词、现实中国和青年担当串成 45 到 60 秒短片。',
-      '数字化展示的作用，是帮助同学更快抓住全篇逻辑。',
+      '自动翻书串起经典导读、理论时间轴、现实案例和最终总结。',
+      '影像短片把书页、关键词、现实中国和青年担当压缩成情感线索。',
+      '多媒体表达的边界很清楚：技术服务内容，画面服务思想。',
     ],
-    takeaway: '多媒体必须服务思想内容，而不是替代思想内容。',
-    tags: ['WebDemo', 'AI视频', '课堂演示'],
-    cue: '这一幕对应 PPT 第9页和第10页，说明数字成果如何辅助讲清理论，而不是让技术喧宾夺主。',
+    takeaway: '让形式变得有用，而不是让形式抢走主题。',
+    tags: ['自动演示', '主题短片', '课堂呈现'],
+    cue: '这一章说明我们为什么要把成果做成可以被观看和复盘的展厅。',
+    turnImage: 'reading-hero.png',
     visual: {
-      type: 'digital',
+      type: 'studio',
       modules: [
-        { title: '自动翻书', note: '按 PPT 逻辑自动演示' },
+        { title: '自动翻书', note: '按汇报逻辑推进章节' },
         { title: '理论时间轴', note: '压缩毛概主线' },
-        { title: '案例拼贴', note: '连接科技、乡村、生态、交通' },
-        { title: '讨论预留', note: '接入小组真实照片' },
-        { title: 'AI视频区', note: '承接情感表达' },
-        { title: '最终总结', note: '三句话收束全篇' },
+        { title: '现实图像', note: '让案例可见可感' },
+        { title: '共读现场', note: '承接线下讨论照片' },
+        { title: '主题短片', note: '集中强化情感表达' },
+        { title: '最终收束', note: '三句话总结全篇' },
       ],
     },
   },
   {
-    chapter: '08 青年',
-    pptMap: 'PPT 11',
+    chapter: '第八章',
+    slideRange: '青年 · 第11页',
     title: '从理论自觉到实践担当',
     thesis: '读经典的终点，是把个人成长放进国家需要和时代趋势中思考。',
     proof: [
@@ -292,18 +307,19 @@ const scenes: Scene[] = [
     ],
     takeaway: '经典阅读最终要转化为方向感、判断力和行动力。',
     tags: ['理论自觉', '实践担当', '青春使命'],
-    cue: '这里把文本重新落回大学生自己：如何面对专业学习、就业选择和未来责任。',
+    cue: '把理论重新落回大学生自己，汇报才有真正的收束力。',
+    turnImage: 'photos/national-library-hall.jpg',
     visual: {
       type: 'image',
-      image: 'reading-hero.png',
-      imageAlt: '书页与青年实践场景融合的主题图',
-      caption: '从书页走向实践：青年担当是最终落脚',
+      image: 'photos/national-library-hall.jpg',
+      imageAlt: '国家图书馆大厅与读者',
+      caption: '从书页走向实践，从理解走向担当',
     },
   },
   {
-    chapter: '09 合卷',
-    pptMap: 'PPT 12',
-    title: '用三句话总结整套 PPT',
+    chapter: '第九章',
+    slideRange: '合卷 · 第12页',
+    title: '用三句话收束整套汇报',
     thesis: '守正创新、两个结合、青年担当，构成这次经典品读的完整闭环。',
     proof: [
       '守正创新，是开辟新境界的方法。',
@@ -312,10 +328,15 @@ const scenes: Scene[] = [
     ],
     takeaway: '在经典中坚定方向，在实践中增长本领。',
     tags: ['全篇总结', '最终收束', '课堂展示'],
-    cue: '最后一幕直接总结整套 PPT。投屏时可以停在这一页，作为全组汇报的收束画面。',
+    cue: '最后把全篇收成一句话：理解时代，也认识自己。',
+    turnImage: 'photos/ten-bamboo-page.jpg',
     visual: {
       type: 'summary',
-      points: ['守正创新', '两个结合', '青年担当'],
+      points: [
+        { title: '守正创新', note: '坚持根本方向，回应时代问题' },
+        { title: '两个结合', note: '扎根中国实际，赓续文化根脉' },
+        { title: '青年担当', note: '把理论方法转化为行动能力' },
+      ],
     },
   },
 ];
@@ -344,7 +365,7 @@ function TextPage({ scene }: { scene: Scene }) {
     <article className="page page--text">
       <div className="page__meta">
         <p className="page__eyebrow">{scene.chapter}</p>
-        <span>{scene.pptMap}</span>
+        <span>{scene.slideRange}</span>
       </div>
       <h2>{scene.title}</h2>
       <p className="page__thesis">{scene.thesis}</p>
@@ -365,12 +386,9 @@ function TextPage({ scene }: { scene: Scene }) {
 
 function ImageVisualPage({ visual }: { visual: ImageVisual }) {
   return (
-    <figure className="photo-frame">
+    <figure className={visual.variant === 'portrait' ? 'photo-frame photo-frame--portrait' : 'photo-frame'}>
       <img src={asset(visual.image)} alt={visual.imageAlt} />
-      <figcaption>
-        <span>{visual.caption}</span>
-        <small>真实图片素材</small>
-      </figcaption>
+      <figcaption>{visual.caption}</figcaption>
     </figure>
   );
 }
@@ -392,18 +410,21 @@ function TimelineVisualPage({ visual }: { visual: TimelineVisual }) {
   );
 }
 
-function TwoCombineVisualPage({ visual }: { visual: TwoCombineVisual }) {
+function DiptychVisualPage({ visual }: { visual: DiptychVisual }) {
   return (
-    <div className="combine-board">
+    <div className="diptych-board">
       {visual.images.map((image, index) => (
-        <figure key={image.label} className={index === 0 ? 'combine-card combine-card--left' : 'combine-card'}>
+        <figure key={image.label} className={index === 0 ? 'diptych-card diptych-card--lower' : 'diptych-card'}>
           <img src={asset(image.src)} alt={image.alt} />
-          <figcaption>{image.label}</figcaption>
+          <figcaption>
+            <strong>{image.label}</strong>
+            <span>{image.note}</span>
+          </figcaption>
         </figure>
       ))}
-      <div className="combine-bridge">
+      <div className="diptych-bridge">
         <span>两个结合</span>
-        <strong>实际与文化共同支撑理论创新</strong>
+        <strong>让科学理论在中国大地上有方向，也有根脉</strong>
       </div>
     </div>
   );
@@ -429,11 +450,11 @@ function DiscussionVisualPage({ visual }: { visual: DiscussionVisual }) {
   return (
     <div className="discussion-board">
       <div className="discussion-board__title">
-        <span>待替换照片</span>
-        <strong>线下讨论过程</strong>
+        <span>线下共读</span>
+        <strong>把真实过程放进汇报</strong>
       </div>
       <div className="discussion-grid">
-        {visual.slots.map((slot, index) => (
+        {visual.slots.map((slot) => (
           <article key={slot.title} className="discussion-slot">
             <img
               src={asset(slot.image)}
@@ -447,23 +468,22 @@ function DiscussionVisualPage({ visual }: { visual: DiscussionVisual }) {
               }}
             />
             <div>
-              <span>照片{index + 1}</span>
               <h3>{slot.title}</h3>
               <p>{slot.note}</p>
             </div>
           </article>
         ))}
       </div>
-      <p className="replace-note">后续将真实照片命名为 group-photo-1.jpg、group-photo-2.jpg、group-photo-3.jpg 后替换即可。</p>
     </div>
   );
 }
 
-function DigitalVisualPage({ visual }: { visual: DigitalVisual }) {
+function StudioVisualPage({ visual }: { visual: StudioVisual }) {
   return (
-    <div className="digital-board">
+    <div className="studio-board">
       <figure className="video-poster">
-        <img src={asset('ai-video-poster.svg')} alt="AI视频演示封面" />
+        <img src={asset('ai-video-poster.svg')} alt="主题短片封面" />
+        <figcaption>让理论之光照亮青春之路</figcaption>
       </figure>
       <div className="module-grid">
         {visual.modules.map((module) => (
@@ -482,9 +502,12 @@ function SummaryVisualPage({ visual }: { visual: SummaryVisual }) {
     <div className="summary-board">
       <p>全篇闭环</p>
       {visual.points.map((point, index) => (
-        <article key={point}>
+        <article key={point.title}>
           <span>{String(index + 1).padStart(2, '0')}</span>
-          <strong>{point}</strong>
+          <div>
+            <strong>{point.title}</strong>
+            <small>{point.note}</small>
+          </div>
         </article>
       ))}
       <blockquote>读经典，不是停留在文本表面，而是在理论中看清时代，在实践中坚定方向。</blockquote>
@@ -499,10 +522,10 @@ function VisualPage({ scene }: { scene: Scene }) {
     <article className="page page--visual">
       {visual.type === 'image' && <ImageVisualPage visual={visual} />}
       {visual.type === 'timeline' && <TimelineVisualPage visual={visual} />}
-      {visual.type === 'two-combine' && <TwoCombineVisualPage visual={visual} />}
+      {visual.type === 'diptych' && <DiptychVisualPage visual={visual} />}
       {visual.type === 'cases' && <CasesVisualPage visual={visual} />}
       {visual.type === 'discussion' && <DiscussionVisualPage visual={visual} />}
-      {visual.type === 'digital' && <DigitalVisualPage visual={visual} />}
+      {visual.type === 'studio' && <StudioVisualPage visual={visual} />}
       {visual.type === 'summary' && <SummaryVisualPage visual={visual} />}
     </article>
   );
@@ -552,8 +575,6 @@ function App() {
     return `${activeScene + 1} / ${scenes.length}`;
   }, [activeScene]);
 
-  const turnImage = scene.visual.type === 'image' ? scene.visual.image : 'reading-hero.png';
-
   return (
     <main className="showcase" aria-label="守正创新经典品读自动演示">
       <video
@@ -568,17 +589,17 @@ function App() {
         <source src={asset('red-motion-bg.mp4')} type="video/mp4" />
       </video>
       <div className="motion-overlay" aria-hidden="true" />
-      <div className="light-beam light-beam--one" aria-hidden="true" />
-      <div className="light-beam light-beam--two" aria-hidden="true" />
+      <div className="silk-light silk-light--one" aria-hidden="true" />
+      <div className="silk-light silk-light--two" aria-hidden="true" />
 
       <section className="stage" aria-live="polite">
         <header className="stage__header">
           <div>
-            <p className="stage__kicker">经典品读 · PPT全逻辑翻书演示</p>
+            <p className="stage__kicker">经典品读 · 10分30秒汇报总览</p>
             <h1>{scene.title}</h1>
           </div>
-          <div className="stage__timer" aria-label={`当前分镜 ${progressLabel}`}>
-            <span>{scene.pptMap}</span>
+          <div className="stage__timer" aria-label={`当前章节 ${progressLabel}`}>
+            <span>{scene.chapter}</span>
             <strong>{progressLabel}</strong>
           </div>
         </header>
@@ -586,16 +607,21 @@ function App() {
         <div className="book-stage">
           <div className="book-shell" aria-label={`${scene.chapter} ${scene.title}`}>
             <div className="book-shadow" aria-hidden="true" />
-            <TextPage scene={scene} />
-            <VisualPage scene={scene} />
+            <div className="page-stack page-stack--left" aria-hidden="true" />
+            <div className="page-stack page-stack--right" aria-hidden="true" />
+            <TextPage key={`text-${activeScene}`} scene={scene} />
+            <VisualPage key={`visual-${activeScene}`} scene={scene} />
             <div className="book-spine" aria-hidden="true" />
             <div
               key={`${flipTick}-${direction}`}
               className={`turn-sheet turn-sheet--${direction}`}
-              style={{ '--turn-image': `url("${asset(turnImage)}")` } as React.CSSProperties}
+              style={{ '--turn-image': `url("${asset(scene.turnImage)}")` } as React.CSSProperties}
               aria-hidden="true"
             >
-              <span />
+              <span className="turn-sheet__image" />
+              <span className="turn-sheet__back" />
+              <span className="turn-sheet__curl" />
+              <span className="turn-sheet__edge" />
             </div>
           </div>
         </div>
@@ -604,7 +630,7 @@ function App() {
           <p className="narration">{scene.cue}</p>
           <div className="controls" aria-label="演示控制">
             <button type="button" onClick={() => goToScene(previousIndex(activeScene), 'prev')}>
-              上一页
+              上一章
             </button>
             <button
               type="button"
@@ -612,10 +638,10 @@ function App() {
               onClick={() => setIsPlaying((value) => !value)}
               aria-pressed={isPlaying}
             >
-              {isPlaying ? '暂停演示' : '继续演示'}
+              {isPlaying ? '停留' : '继续'}
             </button>
             <button type="button" onClick={() => goToScene(nextIndex(activeScene), 'next')}>
-              下一页
+              下一章
             </button>
           </div>
         </footer>
