@@ -1,458 +1,385 @@
 import { useEffect, useMemo, useState } from 'react';
 
-type Keyword = {
-  term: string;
-  summary: string;
+type PageSide = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  points: string[];
 };
 
-type Question = {
-  prompt: string;
-  options: string[];
-  answer: string;
-  explanation: string;
+type Scene = {
+  chapter: string;
+  title: string;
+  cue: string;
+  left: PageSide;
+  right: PageSide;
+  visual: 'opening' | 'timeline' | 'combine' | 'reality' | 'method' | 'media' | 'closing';
 };
 
-const timeline = [
-  {
-    title: '马克思主义基本原理',
-    body: '提供认识世界、改造世界的科学立场、观点和方法。',
-  },
-  {
-    title: '毛泽东思想',
-    body: '把马克思主义基本原理同中国革命和建设具体实际相结合。',
-  },
-  {
-    title: '中国特色社会主义理论体系',
-    body: '围绕改革开放和社会主义现代化建设回答重大实践问题。',
-  },
-  {
-    title: '习近平新时代中国特色社会主义思想',
-    body: '回答新时代坚持和发展中国特色社会主义的重大时代课题。',
-  },
-  {
-    title: '继续推进中国化时代化',
-    body: '在守正创新中回应中国之问、世界之问、人民之问、时代之问。',
-  },
-];
+const sceneDuration = 7200;
 
-const keywords: Keyword[] = [
-  { term: '守正创新', summary: '在坚持马克思主义基本立场、观点、方法的基础上，回应新的时代问题和实践要求。' },
-  { term: '两个结合', summary: '把马克思主义基本原理同中国具体实际相结合，同中华优秀传统文化相结合。' },
-  { term: '中国具体实际', summary: '从中国国情、发展阶段和人民需要出发，回答中国自己的问题。' },
-  { term: '中华优秀传统文化', summary: '为理论创新提供文化根脉和表达资源，使马克思主义在中华文明土壤中扎根。' },
-  { term: '实事求是', summary: '一切从实际出发，在实践中检验和发展真理。' },
-  { term: '群众路线', summary: '坚持人民立场，把人民需要作为理论和实践的重要出发点。' },
-  { term: '独立自主', summary: '中国道路必须立足自身实际，不能照搬照抄外来模式。' },
-  { term: '问题导向', summary: '理论发展要面对真问题，解释现实、回应现实、指导现实。' },
-  { term: '中国式现代化', summary: '符合中国国情、体现社会主义性质、具有中华文明底蕴的现代化道路。' },
-  { term: '青年担当', summary: '把个人成长放进国家需要和时代趋势中，提升本领、服务社会。' },
-  { term: '文化自信', summary: '在理解中华文明连续性和创造性的基础上，坚定走中国道路的文化底气。' },
-  { term: '新质生产力', summary: '以科技创新推动生产力跃升，回应高质量发展和全球竞争的新要求。' },
-  { term: '生态文明', summary: '推动人与自然和谐共生，体现现代化发展理念的深化。' },
-  { term: '乡村振兴', summary: '从中国实际出发解决发展不平衡问题，推动共同富裕。' },
-];
-
-const cases = [
+const scenes: Scene[] = [
   {
-    title: '科技自立自强与新质生产力',
-    theory: '时代化、问题导向、实践创新',
-    body: '面对全球科技竞争和产业变革，理论创新要帮助我们认识新变化、解决新问题。',
-    youth: '在专业学习中重视创新能力，把个人本领同国家发展需要联系起来。',
+    chapter: '01 开卷',
+    title: '守正创新何以开辟新境界',
+    cue: '经典不是静止文字，而是打开时代问题的一束光。',
+    visual: 'opening',
+    left: {
+      eyebrow: '经典品读',
+      title: '从书页进入时代',
+      body: '围绕《开辟马克思主义中国化时代化新境界》，用经典阅读理解毛概主线。',
+      points: ['读文本', '抓问题', '连现实'],
+    },
+    right: {
+      eyebrow: '汇报主问',
+      title: '为什么必须中国化时代化？',
+      body: '马克思主义只有扎根中国实践、回应时代课题，才能不断展现真理力量。',
+      points: ['中国问题', '时代问题', '青年回答'],
+    },
   },
   {
-    title: '乡村振兴与共同富裕',
-    theory: '群众路线、中国具体实际、共同富裕',
-    body: '中国发展不能只看城市，也要回应城乡发展不平衡和人民共同富裕的现实课题。',
-    youth: '在社会实践中走近基层，理解真实中国的广度和复杂性。',
+    chapter: '02 主线',
+    title: '理论在回答中国问题中发展',
+    cue: '毛概课的理论脉络，是一条不断回答时代问题的思想河流。',
+    visual: 'timeline',
+    left: {
+      eyebrow: '毛概脉络',
+      title: '不是背结论，而是看发展',
+      body: '从毛泽东思想到中国特色社会主义理论体系，再到习近平新时代中国特色社会主义思想。',
+      points: ['革命建设', '改革开放', '新时代'],
+    },
+    right: {
+      eyebrow: '一条线索',
+      title: '实践提出问题，理论给出回答',
+      body: '理论创新总是在中国实践中生长，也在新的实践中继续打开空间。',
+      points: ['实践性', '人民性', '时代性'],
+    },
   },
   {
-    title: '生态文明建设',
-    theory: '人与自然和谐共生、发展理念深化',
-    body: '现代化不能只追求速度和规模，也要回应人民对良好生态环境的需要。',
-    youth: '在日常生活和未来职业中形成绿色发展意识，参与可持续实践。',
+    chapter: '03 两个结合',
+    title: '理论扎根中国的两条路径',
+    cue: '第一个结合让理论不悬空，第二个结合让理论有根脉。',
+    visual: 'combine',
+    left: {
+      eyebrow: '第一个结合',
+      title: '同中国具体实际相结合',
+      body: '从中国国情和发展阶段出发，回答中国自己的现代化问题。',
+      points: ['实事求是', '独立自主', '中国式现代化'],
+    },
+    right: {
+      eyebrow: '第二个结合',
+      title: '同中华优秀传统文化相结合',
+      body: '让马克思主义在中华文明土壤中扎根，形成更深厚的文化支撑。',
+      points: ['民为邦本', '天下为公', '文化自信'],
+    },
   },
   {
-    title: '中华优秀传统文化创造性转化',
-    theory: '第二个结合、文化自信',
-    body: '“民为邦本”“天下为公”“和而不同”等思想，为理解人民立场和文明交流提供文化资源。',
-    youth: '在文化学习中增强自信，也学会用现代方式讲好中国故事。',
-  },
-];
-
-const questions: Question[] = [
-  {
-    prompt: '“两个结合”主要指什么？',
-    options: ['同中国具体实际、中华优秀传统文化相结合', '同西方理论、现代技术相结合', '同个人兴趣、校园活动相结合'],
-    answer: '同中国具体实际、中华优秀传统文化相结合',
-    explanation: '“两个结合”强调马克思主义基本原理同中国具体实际相结合，同中华优秀传统文化相结合。',
-  },
-  {
-    prompt: '“守正创新”中的“守正”强调什么？',
-    options: ['坚持马克思主义基本立场、观点、方法', '完全照搬过去的表达', '只追求形式上的新颖'],
-    answer: '坚持马克思主义基本立场、观点、方法',
-    explanation: '守正不是守旧，而是坚持根本方向、人民立场和科学方法。',
+    chapter: '04 现实',
+    title: '每个理论点都要照进现实',
+    cue: '理论的生命力，不在口号里，而在解释现实、回应现实、指导现实中。',
+    visual: 'reality',
+    left: {
+      eyebrow: '现实验证',
+      title: '新质生产力、乡村振兴、生态文明',
+      body: '这些不是孤立案例，而是新时代中国问题的具体场景。',
+      points: ['科技自立自强', '共同富裕', '绿色发展'],
+    },
+    right: {
+      eyebrow: '问题导向',
+      title: '时代出题，理论作答',
+      body: '面对发展、科技、生态与文化课题，守正创新给出方法论支撑。',
+      points: ['解释变化', '回应挑战', '指导实践'],
+    },
   },
   {
-    prompt: '马克思主义中国化时代化为什么要坚持问题导向？',
-    options: ['因为理论要解释现实、回应现实、指导现实', '因为理论只需要记忆概念', '因为现实问题与理论无关'],
-    answer: '因为理论要解释现实、回应现实、指导现实',
-    explanation: '理论的生命力体现在能够回答中国问题、时代问题和人民问题。',
+    chapter: '05 小组阅读',
+    title: '经典阅读不是背概念',
+    cue: '我们把阅读做成可看、可翻、可讲述的学习过程。',
+    visual: 'method',
+    left: {
+      eyebrow: '四步法',
+      title: '精读、关联、讨论、转化',
+      body: '先圈画关键词，再关联毛概知识，最后联系现实案例形成表达。',
+      points: ['精读文本', '关联课程', '转化成果'],
+    },
+    right: {
+      eyebrow: '课堂呈现',
+      title: 'PPT讲逻辑，Demo做演示',
+      body: '自动翻书把理论结构变成演示节奏，让课堂展示更像一次主题展映。',
+      points: ['自动播放', '翻页动效', '红色视频背景'],
+    },
   },
   {
-    prompt: '下面哪项最能体现“同中国具体实际相结合”？',
-    options: ['立足中国国情推进中国式现代化', '照搬别国发展模式', '只讨论抽象概念不联系现实'],
-    answer: '立足中国国情推进中国式现代化',
-    explanation: '中国式现代化体现了从中国实际出发探索现代化道路。',
+    chapter: '06 数字化',
+    title: '从文本到数字展映',
+    cue: 'WebDemo不是炫技，而是把抽象理论转成可感知的课堂体验。',
+    visual: 'media',
+    left: {
+      eyebrow: 'AI视频',
+      title: '让理论之光照亮青春之路',
+      body: '书页翻开，关键词浮现，现实场景推进，青年讨论收束。',
+      points: ['书页', '时代场景', '青年担当'],
+    },
+    right: {
+      eyebrow: '互动保留',
+      title: '演示为主，控制为辅',
+      body: '默认自动演示；需要彩排时，可暂停、上一页、下一页，精准配合讲稿节奏。',
+      points: ['自动演示', '手动控场', '静态部署'],
+    },
   },
   {
-    prompt: '大学生阅读经典文献最重要的意义是什么？',
-    options: ['形成观察现实、理解时代和规划人生的方法', '只为背诵段落', '只为完成一次作业'],
-    answer: '形成观察现实、理解时代和规划人生的方法',
-    explanation: '经典阅读应转化为思想能力和实践自觉，而不只是文本记忆。',
-  },
-];
-
-const reflections = [
-  {
-    image: 'group-photo-1.svg',
-    text: '读经典，让我们更懂理论与现实的联系。',
-    label: '精读文本',
-  },
-  {
-    image: 'group-photo-2.svg',
-    text: '两个结合让我们看到理论扎根中国的方式。',
-    label: '交流讨论',
-  },
-  {
-    image: 'group-photo-3.svg',
-    text: '守正创新不是口号，而是分析问题的方法。',
-    label: '成果打磨',
-  },
-  {
-    image: 'group-photo-1.svg',
-    text: '青年要把个人成长放进时代发展中思考。',
-    label: '青年担当',
+    chapter: '07 合卷',
+    title: '在经典中坚定方向，在实践中增长本领',
+    cue: '读经典，是为了在理论中看清时代，在青春中承担使命。',
+    visual: 'closing',
+    left: {
+      eyebrow: '三句话总结',
+      title: '守正创新，是开辟新境界的方法',
+      body: '“两个结合”让理论扎根中国、回应时代。',
+      points: ['守住根本', '回应时代', '扎根中国'],
+    },
+    right: {
+      eyebrow: '青年落脚',
+      title: '把个人成长放进国家需要',
+      body: '经典阅读最终要转化为理解中国、观察时代、规划人生的思想能力。',
+      points: ['学理论', '看时代', '做青年'],
+    },
   },
 ];
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}${name}`;
 
-function useScrollReveal() {
-  useEffect(() => {
-    const items = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.16 },
-    );
-
-    items.forEach((item) => observer.observe(item));
-    return () => observer.disconnect();
-  }, []);
+function nextIndex(index: number) {
+  return (index + 1) % scenes.length;
 }
 
-const readingPages = [
-  {
-    label: '第一读',
-    title: '从问题进入文本',
-    body: '围绕“为什么必须中国化时代化”提出阅读问题，先抓住文章回答的时代课题。',
-  },
-  {
-    label: '第二读',
-    title: '从关键词进入结构',
-    body: '把“守正创新”“两个结合”“问题导向”作为线索，整理文献内部逻辑。',
-  },
-  {
-    label: '第三读',
-    title: '从课程进入现实',
-    body: '把文本与毛概知识、现实案例和青年成长相互印证，形成小组表达。',
-  },
-];
+function previousIndex(index: number) {
+  return (index - 1 + scenes.length) % scenes.length;
+}
 
-function App() {
-  const [activeKeyword, setActiveKeyword] = useState(keywords[0]);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
-  const [activePage, setActivePage] = useState(0);
+function SceneVisual({ type, sceneIndex }: { type: Scene['visual']; sceneIndex: number }) {
+  if (type === 'timeline') {
+    return (
+      <div className="timeline-visual" aria-hidden="true">
+        {['原理', '毛泽东思想', '理论体系', '新时代', '继续推进'].map((item, index) => (
+          <span key={item} style={{ '--i': index } as React.CSSProperties}>
+            {item}
+          </span>
+        ))}
+      </div>
+    );
+  }
 
-  useScrollReveal();
+  if (type === 'combine') {
+    return (
+      <div className="combine-visual" aria-hidden="true">
+        <div className="combine-visual__ring">
+          <span>中国实际</span>
+          <span>马克思主义</span>
+          <span>中华文化</span>
+        </div>
+      </div>
+    );
+  }
 
-  const score = useMemo(() => {
-    return questions.reduce((total, question, index) => {
-      return total + (answers[index] === question.answer ? 1 : 0);
-    }, 0);
-  }, [answers]);
+  if (type === 'reality') {
+    return (
+      <div className="reality-visual" aria-hidden="true">
+        {['科技', '乡村', '生态', '文化'].map((item, index) => (
+          <i key={item} style={{ '--i': index } as React.CSSProperties}>
+            {item}
+          </i>
+        ))}
+      </div>
+    );
+  }
 
-  const handleAnswer = (questionIndex: number, option: string) => {
-    setAnswers((current) => ({ ...current, [questionIndex]: option }));
-  };
+  if (type === 'method') {
+    return (
+      <div className="method-visual" aria-hidden="true">
+        {['精读', '关联', '讨论', '转化'].map((item, index) => (
+          <b key={item} style={{ '--i': index } as React.CSSProperties}>
+            {item}
+          </b>
+        ))}
+      </div>
+    );
+  }
+
+  if (type === 'media') {
+    return (
+      <div className="media-visual" aria-hidden="true">
+        <div className="media-visual__screen">
+          <span />
+          <span />
+          <span />
+        </div>
+        <p>AI VIDEO</p>
+      </div>
+    );
+  }
+
+  if (type === 'closing') {
+    return (
+      <div className="closing-visual" aria-hidden="true">
+        <span>守正</span>
+        <span>创新</span>
+        <span>担当</span>
+      </div>
+    );
+  }
 
   return (
-    <main id="main-content">
-      <a className="skip-link" href="#guide">跳到主要内容</a>
-      <section className="hero" aria-labelledby="page-title">
-        <div className="hero__overlay" data-reveal>
-          <p className="eyebrow">经典品读数字展厅</p>
-          <h1 id="page-title">守正创新何以开辟新境界</h1>
-          <p className="hero__subtitle">
-            从“两个结合”到新时代青年的理论自觉与实践担当
-          </p>
-          <div className="hero__actions" aria-label="页面快捷入口">
-            <a href="#guide" className="button button--primary">开始品读</a>
-            <a href="#quiz" className="button button--secondary">互动问答</a>
+    <div className="opening-visual" aria-hidden="true">
+      <span className="opening-visual__seal">经典</span>
+      <span className="opening-visual__line" />
+      <span className="opening-visual__year">2026</span>
+    </div>
+  );
+}
+
+function Page({ side, align }: { side: PageSide; align: 'left' | 'right' }) {
+  return (
+    <article className={`page page--${align}`}>
+      <p className="page__eyebrow">{side.eyebrow}</p>
+      <h2>{side.title}</h2>
+      <p className="page__body">{side.body}</p>
+      <ul>
+        {side.points.map((point) => (
+          <li key={point}>{point}</li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+function App() {
+  const [activeScene, setActiveScene] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [flipTick, setFlipTick] = useState(0);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+
+  const scene = scenes[activeScene];
+
+  const goToScene = (index: number, nextDirection: 'next' | 'prev') => {
+    setDirection(nextDirection);
+    setActiveScene(index);
+    setFlipTick((tick) => tick + 1);
+  };
+
+  useEffect(() => {
+    if (!isPlaying) return undefined;
+    const timer = window.setInterval(() => {
+      goToScene(nextIndex(activeScene), 'next');
+    }, sceneDuration);
+    return () => window.clearInterval(timer);
+  }, [activeScene, isPlaying]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight') {
+        goToScene(nextIndex(activeScene), 'next');
+      }
+      if (event.key === 'ArrowLeft') {
+        goToScene(previousIndex(activeScene), 'prev');
+      }
+      if (event.key === ' ') {
+        event.preventDefault();
+        setIsPlaying((value) => !value);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeScene]);
+
+  const progressLabel = useMemo(() => {
+    return `${activeScene + 1} / ${scenes.length}`;
+  }, [activeScene]);
+
+  return (
+    <main className="showcase" aria-label="守正创新经典品读自动演示">
+      <video
+        className="motion-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster={asset('reading-hero.png')}
+        aria-hidden="true"
+      >
+        <source src={asset('red-motion-bg.mp4')} type="video/mp4" />
+      </video>
+      <div className="motion-overlay" aria-hidden="true" />
+      <div className="silk-ribbon silk-ribbon--one" aria-hidden="true" />
+      <div className="silk-ribbon silk-ribbon--two" aria-hidden="true" />
+
+      <section className="stage" aria-live="polite">
+        <header className="stage__header">
+          <div>
+            <p className="stage__kicker">自动演示 · 经典品读数字展映</p>
+            <h1>{scene.title}</h1>
+          </div>
+          <div className="stage__timer" aria-label={`当前分镜 ${progressLabel}`}>
+            <span>{scene.chapter}</span>
+            <strong>{progressLabel}</strong>
+          </div>
+        </header>
+
+        <div className="book-stage">
+          <div className="book-shell" aria-label={`${scene.chapter} ${scene.title}`}>
+            <div className="book-shadow" aria-hidden="true" />
+            <Page side={scene.left} align="left" />
+            <Page side={scene.right} align="right" />
+            <div className="book-spine" aria-hidden="true" />
+            <div
+              key={`${flipTick}-${direction}`}
+              className={`turn-sheet turn-sheet--${direction}`}
+              aria-hidden="true"
+            />
+            <SceneVisual type={scene.visual} sceneIndex={activeScene} />
           </div>
         </div>
-        <div className="hero-book" aria-hidden="true">
-          <div className="book">
-            <div className="book__page book__page--left">
-              <span>守正</span>
-              <small>坚持根本方向</small>
-            </div>
-            <div className="book__page book__page--right">
-              <span>创新</span>
-              <small>回应时代问题</small>
-            </div>
-            <div className="book__flip"></div>
-          </div>
-        </div>
-      </section>
 
-      <section className="band band--book" id="guide" aria-labelledby="guide-title">
-        <div className="section-header">
-          <p className="eyebrow">经典导读</p>
-          <h2 id="guide-title">读什么，为什么读</h2>
-        </div>
-        <div className="reading-desk" data-reveal>
-          <div className="reading-book" aria-live="polite">
-            <div className="reading-book__left">
-              <p className="reading-book__label">{readingPages[activePage].label}</p>
-              <h3>{readingPages[activePage].title}</h3>
-            </div>
-            <div className="reading-book__right">
-              <p>{readingPages[activePage].body}</p>
-              <div className="page-controls" aria-label="翻阅导读">
-                {readingPages.map((item, index) => (
-                  <button
-                    type="button"
-                    key={item.label}
-                    className={index === activePage ? 'page-dot is-active' : 'page-dot'}
-                    onClick={() => setActivePage(index)}
-                    aria-label={`查看${item.label}`}
-                    aria-pressed={index === activePage}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="guide-grid">
-          <article className="info-card">
-            <h3>文献主题</h3>
-            <p>围绕马克思主义中国化时代化，理解守正创新、“两个结合”和问题导向。</p>
-          </article>
-          <article className="info-card">
-            <h3>核心问题</h3>
-            <p>为什么马克思主义必须中国化时代化？青年如何把经典阅读转化为思想能力？</p>
-          </article>
-          <article className="info-card">
-            <h3>学习目标</h3>
-            <p>从文本中提炼方法，把理论放进现实案例和个人成长中理解。</p>
-          </article>
-          <article className="info-card">
-            <h3>课程关联</h3>
-            <p>连接毛概课中的理论成果脉络、实事求是、群众路线、独立自主和中国式现代化。</p>
-          </article>
-        </div>
-      </section>
-
-      <section className="band band--warm" aria-labelledby="timeline-title" data-reveal>
-        <div className="section-header">
-          <p className="eyebrow">毛概理论时间轴</p>
-          <h2 id="timeline-title">理论在回答时代问题中发展</h2>
-        </div>
-        <ol className="timeline">
-          {timeline.map((item, index) => (
-            <li className="timeline__item" key={item.title}>
-              <span className="timeline__index" aria-hidden="true">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="band" aria-labelledby="keywords-title" data-reveal>
-        <div className="section-header">
-          <p className="eyebrow">关键词云</p>
-          <h2 id="keywords-title">从关键词进入文献逻辑</h2>
-        </div>
-        <div className="keyword-layout">
-          <div className="keyword-cloud" aria-label="关键词列表">
-            {keywords.map((keyword) => (
-              <button
-                className={keyword.term === activeKeyword.term ? 'keyword is-active' : 'keyword'}
-                key={keyword.term}
-                onClick={() => setActiveKeyword(keyword)}
-                type="button"
-              >
-                {keyword.term}
-              </button>
-            ))}
-          </div>
-          <aside className="keyword-panel" aria-live="polite">
-            <p className="eyebrow">当前关键词</p>
-            <h3>{activeKeyword.term}</h3>
-            <p>{activeKeyword.summary}</p>
-          </aside>
-        </div>
-      </section>
-
-      <section className="band band--deep" aria-labelledby="cases-title" data-reveal>
-        <div className="section-header section-header--light">
-          <p className="eyebrow">现实案例卡</p>
-          <h2 id="cases-title">每个理论点都对应一个现实问题</h2>
-        </div>
-        <div className="case-grid">
-          {cases.map((item) => (
-            <article className="case-card" key={item.title}>
-              <p className="case-card__tag">{item.theory}</p>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-              <strong>青年启发</strong>
-              <p>{item.youth}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="band" id="quiz" aria-labelledby="quiz-title" data-reveal>
-        <div className="section-header">
-          <p className="eyebrow">互动问答</p>
-          <h2 id="quiz-title">用5道题检验阅读线索</h2>
-        </div>
-        <div className={submitted ? 'quiz quiz--submitted' : 'quiz'}>
-          {questions.map((question, questionIndex) => {
-            const selected = answers[questionIndex];
-            return (
-              <fieldset className="question" key={question.prompt}>
-                <legend>{questionIndex + 1}. {question.prompt}</legend>
-                <div className="question__options">
-                  {question.options.map((option) => {
-                    const isSelected = selected === option;
-                    const isCorrect = submitted && option === question.answer;
-                    const isWrong = submitted && isSelected && option !== question.answer;
-                    const className = [
-                      'option',
-                      isSelected ? 'is-selected' : '',
-                      isCorrect ? 'is-correct' : '',
-                      isWrong ? 'is-wrong' : '',
-                    ].filter(Boolean).join(' ');
-
-                    return (
-                      <button
-                        className={className}
-                        key={option}
-                        onClick={() => handleAnswer(questionIndex, option)}
-                        type="button"
-                        aria-pressed={isSelected}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-                {submitted ? <p className="explanation">{question.explanation}</p> : null}
-              </fieldset>
-            );
-          })}
-          <div className="quiz__footer">
-            <button
-              className="button button--primary"
-              type="button"
-              onClick={() => setSubmitted(true)}
-              disabled={Object.keys(answers).length < questions.length}
-            >
-              提交答案
+        <footer className="stage__footer">
+          <p className="narration">{scene.cue}</p>
+          <div className="controls" aria-label="演示控制">
+            <button type="button" onClick={() => goToScene(previousIndex(activeScene), 'prev')}>
+              上一页
             </button>
             <button
-              className="button button--ghost"
               type="button"
-              onClick={() => {
-                setAnswers({});
-                setSubmitted(false);
-              }}
+              className="controls__primary"
+              onClick={() => setIsPlaying((value) => !value)}
+              aria-pressed={isPlaying}
             >
-              重新作答
+              {isPlaying ? '暂停演示' : '继续演示'}
             </button>
-            <p className="score" role="status">
-              {submitted ? `得分：${score} / ${questions.length}` : '完成全部题目后显示得分'}
-            </p>
+            <button type="button" onClick={() => goToScene(nextIndex(activeScene), 'next')}>
+              下一页
+            </button>
           </div>
-        </div>
-      </section>
+        </footer>
 
-      <section className="band band--warm" aria-labelledby="video-title" data-reveal>
-        <div className="section-header">
-          <p className="eyebrow">AI视频区</p>
-          <h2 id="video-title">让理论之光照亮青春之路</h2>
-        </div>
-        <div className="video-layout">
-          <div className="video-frame">
-            <img src={asset('ai-video-poster.svg')} alt="AI视频占位画面" />
+        <div className={isPlaying ? 'progress-track is-playing' : 'progress-track'} aria-hidden="true">
+          {scenes.map((item, index) => (
             <button
-              className="video-button"
               type="button"
-              onClick={() => setVideoReady((current) => !current)}
-              aria-pressed={videoReady}
+              key={item.chapter}
+              className={index === activeScene ? 'is-active' : ''}
+              onClick={() => goToScene(index, index >= activeScene ? 'next' : 'prev')}
+              aria-label={`跳转到${item.chapter}`}
             >
-              播放演示视频
+              <span
+                style={
+                  index === activeScene && isPlaying
+                    ? ({ '--duration': `${sceneDuration}ms` } as React.CSSProperties)
+                    : undefined
+                }
+              />
             </button>
-          </div>
-          <div className="video-copy">
-            <h3>从书页到时代场景</h3>
-            <p>
-              视频以书页翻开为起点，依次呈现守正创新、“两个结合”、中国式现代化和青年阅读讨论，作为汇报中的情感收束。
-            </p>
-            <p className="video-status" aria-live="polite">
-              {videoReady ? '演示位已激活：替换为正式视频后即可播放。' : '当前为占位演示，正式视频可放入 public 目录后接入。'}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="band" aria-labelledby="wall-title" data-reveal>
-        <div className="section-header">
-          <p className="eyebrow">小组心得墙</p>
-          <h2 id="wall-title">阅读之后，我们形成自己的表达</h2>
-        </div>
-        <div className="reflection-grid">
-          {reflections.map((reflection, index) => (
-            <article className="reflection" key={`${reflection.label}-${index}`}>
-              <img src={asset(reflection.image)} alt={`${reflection.label}占位照片`} />
-              <div>
-                <p className="reflection__label">{reflection.label}</p>
-                <p>{reflection.text}</p>
-              </div>
-            </article>
           ))}
         </div>
-      </section>
-
-      <section className="closing" aria-labelledby="closing-title">
-        <p className="eyebrow">汇报结语</p>
-        <h2 id="closing-title">在经典中坚定方向，在实践中增长本领。</h2>
-        <p>
-          读经典，不是为了停留在文本表面，而是为了在理论中看清时代，在实践中坚定方向，在青春中承担使命。
-        </p>
       </section>
     </main>
   );
