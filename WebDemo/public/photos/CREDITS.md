@@ -22,6 +22,14 @@
   https://commons.wikimedia.org/wiki/File:High_Speed_Rail_(HER)_in_Shanghai.jpg
 - `saihanba-forest.jpg`：Saihanba National Forest Park (Autumn 2011)，Wikimedia Commons。  
   https://commons.wikimedia.org/wiki/File:Saihanba_National_Forest_Park(Autumn_2011)_-_panoramio.jpg
+- `cuhk-reading-room.jpg`：Reference Reading Room, University Library, CUHK，Wikimedia Commons。  
+  https://commons.wikimedia.org/wiki/File:Reference_Reading_Room,_University_Library,_CUHK.jpg
+- `cass-building.jpg`：Chinese Academy of Social Sciences，中国社会科学院建筑，Wikimedia Commons。  
+  https://commons.wikimedia.org/wiki/File:Chinese_Academy_of_Social_Sciences.jpg
+- `china-flag-beijing.jpg`：Chinese flag (Beijing) - IMG 1104，Wikimedia Commons。  
+  https://commons.wikimedia.org/wiki/File:Chinese_flag_(Beijing)_-_IMG_1104.jpg
+- `tiananmen-square-flag.jpg`：Tiananmen Square flag，Wikimedia Commons。  
+  https://commons.wikimedia.org/wiki/File:Tiananmen_Square_flag.jpg
 
 ## 备用素材
 
@@ -40,7 +48,7 @@
 
 ## 线下讨论照片接口
 
-WebDemo 会优先读取以下小组自摄照片；未放入前，页面使用同名主题插画承接版面，不在正式演示中出现制作说明：
+WebDemo 会优先读取以下小组自摄照片；未放入前，页面使用真实阅读、讨论和研究场景照片承接版面：
 
 - `WebDemo/public/group-photo-1.jpg`：读原文，经典文献精读。
 - `WebDemo/public/group-photo-2.jpg`：辨问题，小组交流讨论。

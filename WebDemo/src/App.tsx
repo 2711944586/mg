@@ -49,7 +49,23 @@ type DiscussionVisual = {
 
 type StudioVisual = {
   type: 'studio';
+  heroImage: string;
+  heroAlt: string;
+  caption: string;
   modules: Array<{
+    title: string;
+    note: string;
+    image: string;
+    alt: string;
+  }>;
+};
+
+type ReflectionVisual = {
+  type: 'reflection';
+  panels: Array<{
+    image: string;
+    alt: string;
+    label: string;
     title: string;
     note: string;
   }>;
@@ -57,6 +73,8 @@ type StudioVisual = {
 
 type SummaryVisual = {
   type: 'summary';
+  image?: string;
+  imageAlt?: string;
   points: Array<{
     title: string;
     note: string;
@@ -70,6 +88,7 @@ type SceneVisual =
   | CasesVisual
   | DiscussionVisual
   | StudioVisual
+  | ReflectionVisual
   | SummaryVisual;
 
 type Scene = {
@@ -122,7 +141,7 @@ const scenes: Scene[] = [
     takeaway: '理论从来不是静止的，它在实践中获得新的表达。',
     tags: ['理论脉络', '时代课题', '实践发展'],
     cue: '把文献放进毛概主线里看，才能看见“为什么必须不断推进”。',
-    turnImage: 'photos/ten-bamboo-page.jpg',
+    turnImage: 'photos/cuhk-reading-room.jpg',
     visual: {
       type: 'timeline',
       nodes: [
@@ -228,6 +247,18 @@ const scenes: Scene[] = [
           image: 'photos/high-speed-rail.jpg',
           alt: '高铁列车停靠站台',
         },
+        {
+          title: '理论研究',
+          theory: '调查研究与问题解释',
+          image: 'photos/cass-building.jpg',
+          alt: '中国社会科学院建筑',
+        },
+        {
+          title: '绿色转型',
+          theory: '发展方式与质量变革',
+          image: 'photos/golmud-solar.jpg',
+          alt: '格尔木太阳能项目',
+        },
       ],
     },
   },
@@ -250,19 +281,19 @@ const scenes: Scene[] = [
       slots: [
         {
           image: 'group-photo-1.jpg',
-          fallback: 'group-photo-1.svg',
+          fallback: 'photos/cuhk-reading-room.jpg',
           title: '读原文',
           note: '从关键词圈画进入文献结构',
         },
         {
           image: 'group-photo-2.jpg',
-          fallback: 'group-photo-2.svg',
+          fallback: 'photos/chinese-books-library.jpg',
           title: '辨问题',
           note: '围绕两个结合和现实案例交换判断',
         },
         {
           image: 'group-photo-3.jpg',
-          fallback: 'group-photo-3.svg',
+          fallback: 'photos/cass-building.jpg',
           title: '定表达',
           note: '把观点整理成演示、讲稿和短片',
         },
@@ -282,16 +313,49 @@ const scenes: Scene[] = [
     takeaway: '让形式变得有用，而不是让形式抢走主题。',
     tags: ['自动演示', '主题短片', '课堂呈现'],
     cue: '这一章说明我们为什么要把成果做成可以被观看和复盘的展厅。',
-    turnImage: 'reading-hero.png',
+    turnImage: 'photos/tiananmen-square-flag.jpg',
     visual: {
       type: 'studio',
+      heroImage: 'photos/tiananmen-square-flag.jpg',
+      heroAlt: '天安门广场国旗',
+      caption: '以红色中国现场收束展厅气质',
       modules: [
-        { title: '自动翻书', note: '按汇报逻辑推进章节' },
-        { title: '理论时间轴', note: '压缩毛概主线' },
-        { title: '现实图像', note: '让案例可见可感' },
-        { title: '共读现场', note: '承接线下讨论照片' },
-        { title: '主题短片', note: '集中强化情感表达' },
-        { title: '最终收束', note: '三句话总结全篇' },
+        {
+          title: '自动翻书',
+          note: '章节推进',
+          image: 'photos/national-library-reading-room.jpg',
+          alt: '国家图书馆阅览室',
+        },
+        {
+          title: '理论时间轴',
+          note: '压缩主线',
+          image: 'photos/cuhk-reading-room.jpg',
+          alt: '大学图书馆阅览室',
+        },
+        {
+          title: '现实图像',
+          note: '案例可见',
+          image: 'photos/fast-telescope.jpg',
+          alt: 'FAST射电望远镜',
+        },
+        {
+          title: '共读现场',
+          note: '承接讨论',
+          image: 'photos/chinese-books-library.jpg',
+          alt: '图书馆中文书籍',
+        },
+        {
+          title: '主题短片',
+          note: '强化表达',
+          image: 'photos/china-flag-beijing.jpg',
+          alt: '北京上空飘扬的国旗',
+        },
+        {
+          title: '最终收束',
+          note: '总结全篇',
+          image: 'photos/ten-bamboo-page.jpg',
+          alt: '古籍书页',
+        },
       ],
     },
   },
@@ -310,10 +374,37 @@ const scenes: Scene[] = [
     cue: '把理论重新落回大学生自己，汇报才有真正的收束力。',
     turnImage: 'photos/national-library-hall.jpg',
     visual: {
-      type: 'image',
-      image: 'photos/national-library-hall.jpg',
-      imageAlt: '国家图书馆大厅与读者',
-      caption: '从书页走向实践，从理解走向担当',
+      type: 'reflection',
+      panels: [
+        {
+          image: 'photos/cuhk-reading-room.jpg',
+          alt: '图书馆阅览室',
+          label: '知识',
+          title: '读原著',
+          note: '先把概念、论证和课程主线读准',
+        },
+        {
+          image: 'photos/cass-building.jpg',
+          alt: '中国社会科学院建筑',
+          label: '研究',
+          title: '辨问题',
+          note: '用理论解释中国现实中的具体课题',
+        },
+        {
+          image: 'photos/fuxing-train-guiyang.jpg',
+          alt: '复兴号列车',
+          label: '现场',
+          title: '看发展',
+          note: '在科技、交通、乡村与生态中看见实践',
+        },
+        {
+          image: 'photos/saihanba-forest.jpg',
+          alt: '塞罕坝森林',
+          label: '行动',
+          title: '作回应',
+          note: '把阅读沉淀成判断力、方向感和本领',
+        },
+      ],
     },
   },
   {
@@ -332,6 +423,8 @@ const scenes: Scene[] = [
     turnImage: 'photos/ten-bamboo-page.jpg',
     visual: {
       type: 'summary',
+      image: 'photos/china-flag-beijing.jpg',
+      imageAlt: '北京上空飘扬的国旗',
       points: [
         { title: '守正创新', note: '坚持根本方向，回应时代问题' },
         { title: '两个结合', note: '扎根中国实际，赓续文化根脉' },
@@ -482,12 +575,13 @@ function StudioVisualPage({ visual }: { visual: StudioVisual }) {
   return (
     <div className="studio-board">
       <figure className="video-poster">
-        <img src={asset('ai-video-poster.svg')} alt="主题短片封面" />
-        <figcaption>让理论之光照亮青春之路</figcaption>
+        <img src={asset(visual.heroImage)} alt={visual.heroAlt} />
+        <figcaption>{visual.caption}</figcaption>
       </figure>
       <div className="module-grid">
         {visual.modules.map((module) => (
           <article key={module.title}>
+            <img src={asset(module.image)} alt={module.alt} />
             <strong>{module.title}</strong>
             <span>{module.note}</span>
           </article>
@@ -497,20 +591,44 @@ function StudioVisualPage({ visual }: { visual: StudioVisual }) {
   );
 }
 
-function SummaryVisualPage({ visual }: { visual: SummaryVisual }) {
+function ReflectionVisualPage({ visual }: { visual: ReflectionVisual }) {
   return (
-    <div className="summary-board">
-      <p>全篇闭环</p>
-      {visual.points.map((point, index) => (
-        <article key={point.title}>
-          <span>{String(index + 1).padStart(2, '0')}</span>
+    <div className="reflection-board">
+      {visual.panels.map((panel) => (
+        <article key={panel.title} className="reflection-card">
+          <img src={asset(panel.image)} alt={panel.alt} />
           <div>
-            <strong>{point.title}</strong>
-            <small>{point.note}</small>
+            <span>{panel.label}</span>
+            <strong>{panel.title}</strong>
+            <p>{panel.note}</p>
           </div>
         </article>
       ))}
-      <blockquote>读经典，不是停留在文本表面，而是在理论中看清时代，在实践中坚定方向。</blockquote>
+    </div>
+  );
+}
+
+function SummaryVisualPage({ visual }: { visual: SummaryVisual }) {
+  return (
+    <div className="summary-board">
+      {visual.image && (
+        <figure className="summary-board__image">
+          <img src={asset(visual.image)} alt={visual.imageAlt ?? '总结图像'} />
+        </figure>
+      )}
+      <div className="summary-board__content">
+        <p>全篇闭环</p>
+        {visual.points.map((point, index) => (
+          <article key={point.title}>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <strong>{point.title}</strong>
+              <small>{point.note}</small>
+            </div>
+          </article>
+        ))}
+        <blockquote>读经典，不是停留在文本表面，而是在理论中看清时代，在实践中坚定方向。</blockquote>
+      </div>
     </div>
   );
 }
@@ -526,6 +644,7 @@ function VisualPage({ scene }: { scene: Scene }) {
       {visual.type === 'cases' && <CasesVisualPage visual={visual} />}
       {visual.type === 'discussion' && <DiscussionVisualPage visual={visual} />}
       {visual.type === 'studio' && <StudioVisualPage visual={visual} />}
+      {visual.type === 'reflection' && <ReflectionVisualPage visual={visual} />}
       {visual.type === 'summary' && <SummaryVisualPage visual={visual} />}
     </article>
   );
@@ -589,13 +708,18 @@ function App() {
         <source src={asset('red-motion-bg.mp4')} type="video/mp4" />
       </video>
       <div className="motion-overlay" aria-hidden="true" />
+      <div
+        className="china-atmosphere"
+        style={{ backgroundImage: `url("${asset('photos/china-flag-beijing.jpg')}")` } as React.CSSProperties}
+        aria-hidden="true"
+      />
       <div className="silk-light silk-light--one" aria-hidden="true" />
       <div className="silk-light silk-light--two" aria-hidden="true" />
 
       <section className="stage" aria-live="polite">
         <header className="stage__header">
           <div>
-            <p className="stage__kicker">经典品读 · 10分30秒汇报总览</p>
+            <p className="stage__kicker">经典品读 · 守正创新</p>
             <h1>{scene.title}</h1>
           </div>
           <div className="stage__timer" aria-label={`当前章节 ${progressLabel}`}>
@@ -620,9 +744,13 @@ function App() {
             >
               <span className="turn-sheet__image" />
               <span className="turn-sheet__back" />
-              <span className="turn-sheet__curl" />
+              <span className="turn-sheet__shade" />
+              <span className="turn-sheet__fold" />
+              <span className="turn-sheet__corner" />
               <span className="turn-sheet__edge" />
+              <span className="turn-sheet__glint" />
             </div>
+            <div key={`settle-${flipTick}`} className={`book-settle book-settle--${direction}`} aria-hidden="true" />
           </div>
         </div>
 
