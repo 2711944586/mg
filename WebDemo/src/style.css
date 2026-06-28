@@ -280,6 +280,7 @@ button:focus-visible {
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: clamp(0.5rem, 1vw, 1rem);
   padding: clamp(0.78rem, 1.35vw, 1.42rem) clamp(1rem, 3.8vw, 4rem);
+  overflow: hidden;
 }
 
 .stage__header,
@@ -358,7 +359,7 @@ button:focus-visible {
 
 .book-case {
   position: relative;
-  width: min(1160px, calc(100vw - 4.5rem));
+  width: min(1160px, calc(100vw - 4.5rem), calc((100dvh - 14.6rem) * 1.78));
   aspect-ratio: 1.78 / 1;
   perspective: 2100px;
   pointer-events: none;
@@ -1559,6 +1560,7 @@ button:focus-visible {
   position: relative;
   z-index: 40;
   align-items: end;
+  min-height: 2.7rem;
 }
 
 .narration {
@@ -1695,7 +1697,7 @@ button:focus-visible {
 
 @media (max-width: 1180px) {
   .book-case {
-    width: min(1080px, calc(100vw - 2.5rem));
+    width: min(1080px, calc(100vw - 2.5rem), calc((100dvh - 13.2rem) * 1.78));
   }
 
   .page--text {
@@ -1718,17 +1720,16 @@ button:focus-visible {
 
   .stage__header,
   .stage__footer {
-    flex-direction: column;
-    align-items: stretch;
+    gap: 0.9rem;
   }
 
   .stage__timer {
-    width: 100%;
-    text-align: left;
+    min-width: 8rem;
+    padding: 0.66rem 0.78rem;
   }
 
   .book-case {
-    width: min(94vw, 780px);
+    width: min(94vw, 780px, calc((100svh - 12.2rem) * 1.78));
   }
 
   .page-stack,
@@ -1753,17 +1754,35 @@ button:focus-visible {
   }
 
   .controls {
-    width: 100%;
+    gap: 0.48rem;
   }
 
   .controls button {
-    flex: 1;
+    flex: 0 0 auto;
   }
 }
 
 @media (max-width: 680px) {
   .stage {
     padding: 1rem;
+  }
+
+  .stage__header,
+  .stage__footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.82rem;
+  }
+
+  .stage__timer {
+    width: 100%;
+    min-width: 0;
+    padding: 0.72rem 0.82rem;
+    text-align: left;
+  }
+
+  .book-case {
+    width: min(94vw, calc((100svh - 18.6rem) * 1.78));
   }
 
   .stage__kicker {
@@ -1842,10 +1861,12 @@ button:focus-visible {
   }
 
   .controls {
+    width: 100%;
     flex-direction: column;
   }
 
   .controls button {
+    flex: 1 1 auto;
     width: 100%;
   }
 
