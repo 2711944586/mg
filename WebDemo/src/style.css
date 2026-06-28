@@ -349,8 +349,8 @@ button:focus-visible {
 
 .book-case {
   position: relative;
-  width: min(1152px, calc(100vw - 4.5rem), calc((100dvh - 14.6rem) * 1.532));
-  aspect-ratio: 1152 / 752;
+  width: min(1152px, calc(100vw - 4.5rem), calc((100dvh - 14.6rem) * 1.44));
+  aspect-ratio: 1152 / 800;
   perspective: 1800px;
   pointer-events: auto;
   transform: translateZ(0);
@@ -1627,7 +1627,7 @@ button:focus-visible {
 
 @media (max-width: 1180px) {
   .book-case {
-    width: min(1050px, calc(100vw - 2.5rem), calc((100dvh - 13.2rem) * 1.532));
+    width: min(1050px, calc(100vw - 2.5rem), calc((100dvh - 13.2rem) * 1.44));
   }
 
   .page--text {
@@ -1701,7 +1701,7 @@ button:focus-visible {
   }
 
   .book-case {
-    width: min(94vw, 760px, calc((100svh - 12.2rem) * 1.532));
+    width: min(94vw, 760px, calc((100svh - 12.2rem) * 1.44));
   }
 
   .page-stack,
@@ -1905,8 +1905,8 @@ button:focus-visible {
   }
 
   .book-case {
-    width: min(94vw, 560px, calc((100svh - 18.6rem) * 1.532));
-    aspect-ratio: 1152 / 752;
+    width: min(94vw, 560px, calc((100svh - 18.6rem) * 1.44));
+    aspect-ratio: 1152 / 800;
   }
 
   .stage__kicker {

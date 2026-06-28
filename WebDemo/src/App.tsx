@@ -108,7 +108,7 @@ type Scene = {
 const sceneDuration = 10800;
 const turnDuration = 600;
 const bookWidth = 1152;
-const bookHeight = 752;
+const bookHeight = 800;
 
 type TurnInstance = {
   turn: (...args: unknown[]) => unknown;
