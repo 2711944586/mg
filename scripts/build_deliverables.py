@@ -20,9 +20,11 @@ from pptx.util import Inches as PptInches, Pt as PptPt
 ROOT = Path(__file__).resolve().parents[1]
 PHOTOS = ROOT / "WebDemo" / "public" / "photos"
 PUBLIC = ROOT / "WebDemo" / "public"
+DOCS = ROOT / "docs"
+DELIVERABLES = ROOT / "deliverables"
 
-PPTX_OUT = ROOT / "守正创新经典品读汇报.pptx"
-DOCX_OUT = ROOT / "汇报讲稿.docx"
+PPTX_OUT = DELIVERABLES / "守正创新经典品读汇报.pptx"
+DOCX_OUT = DELIVERABLES / "汇报讲稿.docx"
 
 RED_DARK = "3A0309"
 RED = "8F1014"
@@ -364,6 +366,7 @@ def slide_summary(prs, data):
 
 
 def build_pptx():
+    DELIVERABLES.mkdir(exist_ok=True)
     prs = Presentation()
     prs.slide_width = PptInches(13.333)
     prs.slide_height = PptInches(7.5)
@@ -432,6 +435,7 @@ def iter_markdown_sections(text: str):
 
 
 def build_docx():
+    DELIVERABLES.mkdir(exist_ok=True)
     doc = Document()
     section = doc.sections[0]
     section.page_width = Inches(8.5)
@@ -460,7 +464,7 @@ def build_docx():
     run = subtitle.add_run("《开辟马克思主义中国化时代化新境界》经典品读汇报讲稿 | 10分30秒")
     set_run_font(run, "Microsoft YaHei", 11, MUTED, True)
 
-    md = (ROOT / "汇报讲稿.md").read_text(encoding="utf-8")
+    md = (DOCS / "汇报讲稿.md").read_text(encoding="utf-8")
     for heading, body in iter_markdown_sections(md):
         p = doc.add_paragraph()
         p.paragraph_format.space_before = Pt(10)

@@ -31,16 +31,10 @@
 - `tiananmen-square-flag.jpg`：Tiananmen Square flag，Wikimedia Commons。  
   https://commons.wikimedia.org/wiki/File:Tiananmen_Square_flag.jpg
 
-## 备用素材
+## 补充演示素材
 
-- `reading-library.jpg`：Students Reading at Tables in School Library (GN08836)，Wikimedia Commons。  
-  https://commons.wikimedia.org/wiki/File:Students_Reading_at_Tables_in_School_Library_(GN08836).jpg
 - `chinese-books-library.jpg`：Chinese books at a library 2，Wikimedia Commons。  
   https://commons.wikimedia.org/wiki/File:Chinese_books_at_a_library_2.jpg
-- `lishui-village.jpg`：Small countryside village, Lishui, China，Wikimedia Commons。  
-  https://commons.wikimedia.org/wiki/File:Small_countryside_village,_Lishui,_China.jpg
-- `china-science-museum.jpg`：China Science and Technology Museum，Wikimedia Commons。  
-  https://commons.wikimedia.org/wiki/File:China_Science_and_Technology_Museum.jpg
 - `fuxing-train-guiyang.jpg`：Fuxing train in Guiyang East，Wikimedia Commons。  
   https://commons.wikimedia.org/wiki/File:Fuxing_train_in_Guiyang_East.jpg
 - `golmud-solar.jpg`：3 MW CPV project in Golmud, China，Wikimedia Commons。  

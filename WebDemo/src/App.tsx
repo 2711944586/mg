@@ -106,7 +106,7 @@ type Scene = {
 };
 
 const sceneDuration = 10800;
-const flipDuration = 2200;
+const flipDuration = 2050;
 
 type TurnTransition = {
   from: number;
@@ -712,7 +712,6 @@ function App() {
   useEffect(() => {
     const imageNames = new Set([
       'reading-hero.png',
-      'theme-video-poster.svg',
       'photos/china-flag-beijing.jpg',
       ...scenes.flatMap(getSceneAssetNames),
     ]);
@@ -720,6 +719,7 @@ function App() {
       const image = new Image();
       image.decoding = 'async';
       image.src = asset(name);
+      void image.decode?.().catch(() => undefined);
       return image;
     });
     return () => {
