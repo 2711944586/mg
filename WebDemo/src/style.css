@@ -349,11 +349,31 @@ button:focus-visible {
 
 .book-case {
   position: relative;
-  width: min(1152px, calc(100vw - 4.5rem), calc((100dvh - 14.6rem) * 1.44));
-  aspect-ratio: 1152 / 800;
+  --front-depth: 0px;
+  --back-depth: 0px;
+  --front-offset: 0px;
+  --back-offset: 0px;
+  --front-stack-opacity: 0.22;
+  --back-stack-opacity: 0.22;
+  width: min(1280px, calc(100vw - 4.5rem), calc((100dvh - 14.6rem) * 1.6));
+  aspect-ratio: 1280 / 800;
   perspective: 1800px;
   pointer-events: auto;
-  transform: translateZ(0);
+  opacity: 0;
+  transform: translate3d(0, 0.55rem, 0) scale(1.012);
+  transition:
+    opacity 320ms ease,
+    transform 420ms var(--ease);
+  will-change: opacity, transform;
+}
+
+.book-case.is-ready {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.book-case:not(.is-ready) {
+  pointer-events: none;
 }
 
 .book-case::before {
@@ -448,6 +468,20 @@ button:focus-visible {
   pointer-events: auto;
 }
 
+.turnjs-book .page-wrapper,
+.turnjs-book .turn-page-wrapper {
+  background:
+    linear-gradient(90deg, rgba(84, 26, 11, 0.1), transparent 16% 84%, rgba(84, 26, 11, 0.08)),
+    linear-gradient(135deg, #fff8e8, var(--paper-solid) 54%, var(--paper-back));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.turnjs-book .page-wrapper > div,
+.turnjs-book .turn-page-wrapper > div {
+  background-color: var(--paper-solid);
+}
+
 .turnjs-book:active {
   cursor: grabbing;
 }
@@ -481,6 +515,10 @@ button:focus-visible {
   pointer-events: none;
 }
 
+.book-case.is-intro .book-shadow {
+  animation: bookShadowBreathe 1.45s var(--ease) both;
+}
+
 .page-stack {
   position: absolute;
   z-index: 0;
@@ -497,11 +535,23 @@ button:focus-visible {
 }
 
 .page-stack--left {
-  left: -0.36rem;
+  left: calc(-0.36rem + var(--front-offset));
+  width: calc(49.5% + var(--front-depth));
+  opacity: var(--front-stack-opacity);
+  transition:
+    left 240ms ease,
+    width 240ms ease,
+    opacity 240ms ease;
 }
 
 .page-stack--right {
-  right: -0.42rem;
+  right: calc(-0.42rem + var(--back-offset));
+  width: calc(49.5% + var(--back-depth));
+  opacity: var(--back-stack-opacity);
+  transition:
+    right 240ms ease,
+    width 240ms ease,
+    opacity 240ms ease;
 }
 
 .page {
@@ -578,7 +628,7 @@ button:focus-visible {
   border-radius: 13px 5px 5px 13px;
   transform-origin: right center;
   transform: none;
-  padding: clamp(1.38rem, 2vw, 2.18rem) clamp(1.35rem, 2.08vw, 2.34rem) clamp(1.42rem, 2.25vw, 2.4rem);
+  padding: clamp(1.12rem, 1.65vw, 1.82rem) clamp(1.28rem, 2vw, 2.2rem) clamp(1.12rem, 1.72vw, 1.88rem);
 }
 
 .page--visual {
@@ -616,6 +666,19 @@ button:focus-visible {
     linear-gradient(90deg, rgba(42, 2, 7, 0.34), transparent 26%),
     linear-gradient(135deg, #8a1210, #3a0308 78%);
   background-color: #3a0308;
+}
+
+.page--back-cover {
+  border-radius: 13px 5px 5px 13px;
+  transform-origin: right center;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.26), transparent 28%),
+    linear-gradient(135deg, rgba(255, 214, 127, 0.18), transparent 36%),
+    linear-gradient(135deg, #7f120f, #350207 78%);
+}
+
+.page--back-cover div {
+  opacity: 0.82;
 }
 
 .page--cover::before {
@@ -692,7 +755,7 @@ button:focus-visible {
 }
 
 .page h2 {
-  margin: 0.5rem 0 0.7rem;
+  margin: 0.42rem 0 0.58rem;
   font-family: var(--title-font);
   font-size: clamp(2.16rem, 2.98vw, 3.46rem);
   font-weight: 900;
@@ -707,7 +770,7 @@ button:focus-visible {
   margin: 0;
   font-family: var(--reading-font);
   font-size: clamp(1.18rem, 1.48vw, 1.4rem);
-  line-height: 1.78;
+  line-height: 1.68;
   color: rgba(42, 12, 7, 0.94);
   font-weight: 600;
   text-wrap: pretty;
@@ -715,15 +778,15 @@ button:focus-visible {
 
 .proof-list {
   display: grid;
-  gap: 0.56rem;
+  gap: 0.48rem;
   padding: 0;
-  margin: clamp(0.82rem, 1.28vw, 1.08rem) 0 0;
+  margin: clamp(0.72rem, 1.12vw, 0.94rem) 0 0;
   list-style: none;
 }
 
 .proof-list li {
   position: relative;
-  padding: 0.66rem 0.88rem 0.68rem 1.88rem;
+  padding: 0.58rem 0.78rem 0.6rem 1.72rem;
   border-radius: 7px;
   background:
     linear-gradient(90deg, rgba(255, 250, 238, 0.68), rgba(255, 241, 200, 0.48)),
@@ -731,7 +794,7 @@ button:focus-visible {
   color: rgba(42, 12, 7, 0.95);
   font-family: var(--reading-font);
   font-size: clamp(1.06rem, 1.18vw, 1.18rem);
-  line-height: 1.58;
+  line-height: 1.48;
   font-weight: 600;
   text-wrap: pretty;
   box-shadow:
@@ -752,14 +815,14 @@ button:focus-visible {
 }
 
 .page blockquote {
-  margin: clamp(0.76rem, 1.24vw, 1rem) 0 0;
-  padding: 0.76rem 0.9rem;
+  margin: clamp(0.66rem, 1.08vw, 0.88rem) 0 0;
+  padding: 0.66rem 0.82rem;
   border-left: 4px solid #921912;
   background: rgba(255, 249, 232, 0.48);
   color: rgba(42, 12, 7, 0.96);
   font-family: var(--reading-font);
   font-size: clamp(1.1rem, 1.24vw, 1.22rem);
-  line-height: 1.62;
+  line-height: 1.52;
   font-weight: 600;
   text-wrap: balance;
 }
@@ -767,9 +830,9 @@ button:focus-visible {
 .tag-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.42rem;
+  gap: 0.36rem;
   margin: auto 0 0;
-  padding-top: clamp(0.58rem, 1vw, 0.84rem);
+  padding-top: clamp(0.46rem, 0.86vw, 0.7rem);
 }
 
 .tag-row span {
@@ -1615,6 +1678,12 @@ button:focus-visible {
   to { transform: translate3d(8vw, 3vh, 0) rotate(-7deg); opacity: 0.86; }
 }
 
+@keyframes bookShadowBreathe {
+  0% { transform: translate3d(0, 0.75rem, -140px) scaleX(0.86); opacity: 0.42; }
+  42% { transform: translate3d(0, 0.2rem, -140px) scaleX(1.06); opacity: 0.58; }
+  100% { transform: translate3d(0, 0, -140px) scaleX(1); opacity: 1; }
+}
+
 @keyframes cardRise {
   from { opacity: 0; transform: translate3d(0, 0.65rem, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
@@ -1627,7 +1696,7 @@ button:focus-visible {
 
 @media (max-width: 1180px) {
   .book-case {
-    width: min(1050px, calc(100vw - 2.5rem), calc((100dvh - 13.2rem) * 1.44));
+    width: min(1120px, calc(100vw - 2.5rem), calc((100dvh - 13.2rem) * 1.6));
   }
 
   .page--text {
@@ -1701,7 +1770,7 @@ button:focus-visible {
   }
 
   .book-case {
-    width: min(94vw, 760px, calc((100svh - 12.2rem) * 1.44));
+    width: min(94vw, 820px, calc((100svh - 12.2rem) * 1.6));
   }
 
   .page-stack,
@@ -1905,8 +1974,8 @@ button:focus-visible {
   }
 
   .book-case {
-    width: min(94vw, 560px, calc((100svh - 18.6rem) * 1.44));
-    aspect-ratio: 1152 / 800;
+    width: min(94vw, 600px, calc((100svh - 18.6rem) * 1.6));
+    aspect-ratio: 1280 / 800;
   }
 
   .stage__kicker {
