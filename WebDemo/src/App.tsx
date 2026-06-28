@@ -106,7 +106,7 @@ type Scene = {
 };
 
 const sceneDuration = 10800;
-const flipDuration = 1780;
+const flipDuration = 2200;
 
 type TurnTransition = {
   from: number;
@@ -273,16 +273,16 @@ const scenes: Scene[] = [
   {
     chapter: '第六章',
     slideRange: '共读 · 第8页',
-    title: '把讨论留在真实现场',
-    thesis: '经典品读不是临时拼接材料，而是经历阅读、辨析、取舍和共同表达的过程。',
+    title: '几张照片里的共读现场',
+    thesis: '我们把文本、课堂笔记和案例材料摊开来，一边读一边改，最后把零散想法收成可以讲清楚的表达。',
     proof: [
-      '精读文本，圈画“守正创新”“两个结合”“问题导向”等关键词。',
-      '关联毛概，把文本内容与课程知识点一一对应。',
-      '交流讨论，围绕中国化时代化、青年担当和现实案例形成共同观点。',
+      '先把原文读顺，标出“守正创新”“两个结合”“问题导向”等关键词。',
+      '再把毛概主线接上，确认每个概念应该落在哪一页、哪一句。',
+      '最后一起改讲法、定节奏，把现场讨论变成完整汇报。',
     ],
-    takeaway: '共读让文本从个人理解走向共同表达。',
-    tags: ['精读文本', '线下讨论', '成果打磨'],
-    cue: '这一章为小组真实活动留下位置，让汇报有过程、有现场。',
+    takeaway: '坐下来认真读过，讲出来才有底气。',
+    tags: ['小组共读', '现场讨论', '汇报打磨'],
+    cue: '这一页放小组讨论照片，也把准备过程讲清楚。',
     turnImage: 'photos/national-library-hall.jpg',
     visual: {
       type: 'discussion',
@@ -290,23 +290,23 @@ const scenes: Scene[] = [
         {
           image: 'group-photo-1.jpg',
           fallback: 'photos/cuhk-reading-room.jpg',
-          sceneLabel: '读原文现场',
-          title: '读原文',
-          note: '从关键词圈画进入文献结构',
+          sceneLabel: '现场 01',
+          title: '围坐读文本',
+          note: '先把原文读顺，把关键词和课程主线对上',
         },
         {
           image: 'group-photo-2.jpg',
           fallback: 'photos/chinese-books-library.jpg',
-          sceneLabel: '辨问题现场',
-          title: '辨问题',
-          note: '围绕两个结合和现实案例交换判断',
+          sceneLabel: '现场 02',
+          title: '一起辨问题',
+          note: '把“两个结合”和现实案例放在一起讨论',
         },
         {
           image: 'group-photo-3.jpg',
           fallback: 'photos/national-library-hall.jpg',
-          sceneLabel: '定表达现场',
-          title: '定表达',
-          note: '把观点整理成演示、讲稿和短片',
+          sceneLabel: '现场 03',
+          title: '收束成表达',
+          note: '确定演示顺序、讲稿节奏和最终呈现方式',
         },
       ],
     },
@@ -446,6 +446,33 @@ const scenes: Scene[] = [
 ];
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}${name}`;
+
+function getVisualAssetNames(visual: SceneVisual) {
+  switch (visual.type) {
+    case 'image':
+      return [visual.image];
+    case 'diptych':
+      return visual.images.map((image) => image.src);
+    case 'cases':
+      return visual.cases.map((item) => item.image);
+    case 'discussion':
+      return visual.slots.flatMap((slot) => [slot.image, slot.fallback]);
+    case 'studio':
+      return [visual.heroImage, ...visual.modules.map((module) => module.image)];
+    case 'reflection':
+      return visual.panels.map((panel) => panel.image);
+    case 'summary':
+      return visual.image ? [visual.image] : [];
+    case 'timeline':
+      return [];
+    default:
+      return [];
+  }
+}
+
+function getSceneAssetNames(scene: Scene) {
+  return [scene.turnImage, ...getVisualAssetNames(scene.visual)];
+}
 
 function getInitialScene() {
   const sceneParam = new URLSearchParams(window.location.search).get('scene');
@@ -683,6 +710,27 @@ function App() {
   };
 
   useEffect(() => {
+    const imageNames = new Set([
+      'reading-hero.png',
+      'theme-video-poster.svg',
+      'photos/china-flag-beijing.jpg',
+      ...scenes.flatMap(getSceneAssetNames),
+    ]);
+    const preloaders = Array.from(imageNames).map((name) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = asset(name);
+      return image;
+    });
+    return () => {
+      preloaders.forEach((image) => {
+        image.onload = null;
+        image.onerror = null;
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     if (!isPlaying || transition) return undefined;
     const timer = window.setTimeout(() => {
       goToScene(nextIndex(activeScene), 'next');
@@ -724,6 +772,16 @@ function App() {
   const turnScene = transition ? scenes[transition.from] : scene;
   const incomingScene = transition ? scenes[transition.to] : null;
   const turnDirection = transition?.direction ?? 'next';
+  const currentTextClass = transition
+    ? turnDirection === 'prev'
+      ? 'page--turning-source page--turning-text'
+      : 'page--outgoing-passive page--outgoing-text'
+    : '';
+  const currentVisualClass = transition
+    ? turnDirection === 'next'
+      ? 'page--turning-source page--turning-visual'
+      : 'page--outgoing-passive page--outgoing-visual'
+    : '';
 
   return (
     <main className="showcase" aria-label="守正创新经典品读自动演示">
@@ -767,21 +825,29 @@ function App() {
             <div className="book-shadow" aria-hidden="true" />
             <div className="page-stack page-stack--left" aria-hidden="true" />
             <div className="page-stack page-stack--right" aria-hidden="true" />
-            {incomingScene && turnDirection === 'prev' && (
-              <TextPage key={`incoming-text-${transition?.to ?? activeScene}`} scene={incomingScene} className="page--incoming" />
-            )}
-            {incomingScene && turnDirection === 'next' && (
-              <VisualPage key={`incoming-visual-${transition?.to ?? activeScene}`} scene={incomingScene} className="page--incoming" />
+            {incomingScene && (
+              <>
+                <TextPage
+                  key={`incoming-text-${flipTick}-${transition?.to ?? activeScene}`}
+                  scene={incomingScene}
+                  className={`page--incoming page--incoming-text page--incoming-${turnDirection}`}
+                />
+                <VisualPage
+                  key={`incoming-visual-${flipTick}-${transition?.to ?? activeScene}`}
+                  scene={incomingScene}
+                  className={`page--incoming page--incoming-visual page--incoming-${turnDirection}`}
+                />
+              </>
             )}
             <TextPage
               key={`text-${activeScene}`}
               scene={scene}
-              className={turnDirection === 'prev' && transition ? 'page--turning-source' : ''}
+              className={currentTextClass}
             />
             <VisualPage
               key={`visual-${activeScene}`}
               scene={scene}
-              className={turnDirection === 'next' && transition ? 'page--turning-source' : ''}
+              className={currentVisualClass}
             />
             <div className="book-spine" aria-hidden="true" />
             {transition && (
