@@ -16,7 +16,7 @@ classic-reading-project/
 ├── PPT大纲与逐页文案.md
 ├── 汇报讲稿.md
 ├── 经典品读活动总结.md
-├── AI视频脚本与分镜.md
+├── 主题短片脚本与分镜.md
 ├── 素材清单.md
 └── WebDemo/
     ├── package.json
@@ -25,7 +25,7 @@ classic-reading-project/
     ├── public/
     │   ├── reading-hero.png
     │   ├── red-motion-bg.mp4
-    │   ├── ai-video-poster.svg
+    │   ├── theme-video-poster.svg
     │   ├── group-photo-1.svg
     │   ├── group-photo-2.svg
     │   ├── group-photo-3.svg
@@ -150,17 +150,17 @@ WebDemo/public/group-photo-3.jpg
 - `group-photo-2.jpg`：辨问题，小组交流讨论。
 - `group-photo-3.jpg`：定表达，成果打磨和彩排。
 
-如果还没有放入照片，页面会使用同名主题插画维持正式版面。
+如果还没有放入照片，页面会先使用同主题画面保持完整版式。
 
 ### 替换主题短片
 
-当前第七章使用 `WebDemo/public/ai-video-poster.svg` 作为主题短片封面。正式短片完成后，可放入：
+当前第七章使用 `WebDemo/public/theme-video-poster.svg` 作为主题短片封面。正式短片完成后，可放入：
 
 ```text
-WebDemo/public/ai-video.mp4
+WebDemo/public/theme-video.mp4
 ```
 
-再把 `App.tsx` 中的封面图区域替换为视频标签即可。短片分镜见 `AI视频脚本与分镜.md`。
+再把 `App.tsx` 中的封面图区域替换为视频标签即可。短片分镜见 `主题短片脚本与分镜.md`。
 
 ---
 
@@ -193,7 +193,7 @@ WebDemo/public/ai-video.mp4
 - `PPT大纲与逐页文案.md`：逐页文案与设计说明。
 - `汇报讲稿.md`：10分30秒口语稿。
 - `经典品读活动总结.md`：活动总结与照片说明。
-- `AI视频脚本与分镜.md`：主题短片脚本。
+- `主题短片脚本与分镜.md`：主题短片脚本。
 - `素材清单.md`：PPT、WebDemo、短片素材说明。
 - `WebDemo/`：可本地运行、可静态部署的自动翻书演示。
 - 小组真实活动照片3张。
@@ -205,6 +205,7 @@ WebDemo/public/ai-video.mp4
 
 - PPT：12页，逻辑为“经典出发-毛概进入-文本展开-现实验证-青年落脚”。
 - 讲稿：按12页分段，口语化表达，适合10分30秒汇报。
-- WebDemo：红色动态背景、自动翻书、真实图片、九章总结、线下讨论影像接口、静态部署适配。
+- WebDemo：红色动态背景、自动翻书、真实图片、九章总结、线下讨论现场影像、静态部署适配。
 - 主题短片：时长45-60秒，承接“从书页到时代场景，从经典阅读到青年担当”。
 - 素材：真实图片来源已记录在 `WebDemo/public/photos/CREDITS.md`。
+

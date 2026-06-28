@@ -46,10 +46,11 @@
 - `golmud-solar.jpg`：3 MW CPV project in Golmud, China，Wikimedia Commons。  
   https://commons.wikimedia.org/wiki/File:3_MW_CPV_project_in_Golmud,_China.jpg
 
-## 线下讨论照片接口
+## 线下讨论现场影像
 
 WebDemo 会优先读取以下小组自摄照片；未放入前，页面使用真实阅读、讨论和研究场景照片承接版面：
 
 - `WebDemo/public/group-photo-1.jpg`：读原文，经典文献精读。
 - `WebDemo/public/group-photo-2.jpg`：辨问题，小组交流讨论。
 - `WebDemo/public/group-photo-3.jpg`：定表达，成果打磨和彩排。
+

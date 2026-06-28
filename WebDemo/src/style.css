@@ -302,6 +302,7 @@ button:focus-visible {
 
 .page-stack {
   position: absolute;
+  z-index: 0;
   top: 1.5%;
   bottom: -1.5%;
   width: 49.5%;
@@ -323,6 +324,7 @@ button:focus-visible {
 
 .page {
   position: relative;
+  z-index: 2;
   min-width: 0;
   color: var(--ink);
   background:
@@ -369,6 +371,8 @@ button:focus-visible {
 }
 
 .page--text {
+  grid-column: 1;
+  grid-row: 1;
   border-radius: 13px 5px 5px 13px;
   transform-origin: right center;
   transform: rotateY(4.6deg);
@@ -376,6 +380,8 @@ button:focus-visible {
 }
 
 .page--visual {
+  grid-column: 2;
+  grid-row: 1;
   border-radius: 5px 13px 13px 5px;
   transform-origin: left center;
   transform: rotateY(-4.6deg);
@@ -397,6 +403,20 @@ button:focus-visible {
 .page--visual > * {
   position: relative;
   z-index: 2;
+}
+
+.page--incoming {
+  z-index: 3;
+  pointer-events: none;
+  opacity: 1;
+  animation: incomingPageReveal 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
+  will-change: transform, opacity, filter;
+}
+
+.page--turning-source {
+  z-index: 5;
+  pointer-events: none;
+  will-change: opacity, transform, filter;
 }
 
 .page__meta {
@@ -780,6 +800,7 @@ button:focus-visible {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.42);
   color: #561007;
+  box-shadow: inset 0 0 0 1px rgba(122, 24, 14, 0.12);
 }
 
 .discussion-board__title span {
@@ -803,16 +824,27 @@ button:focus-visible {
 .discussion-slot {
   position: relative;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(122, 24, 14, 0.14);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    0 12px 26px rgba(72, 16, 6, 0.12);
 }
 
-.discussion-slot img {
+.discussion-slot__media {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.discussion-slot__media img {
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -823,13 +855,28 @@ button:focus-visible {
   transform: scale(1.015);
 }
 
-.discussion-slot::after {
+.discussion-slot__media::after {
   content: "";
   position: absolute;
-  inset: 0 0 auto;
-  height: 68%;
+  inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(45, 8, 4, 0), rgba(45, 8, 4, 0.18));
+  background:
+    linear-gradient(180deg, rgba(45, 8, 4, 0.05), rgba(45, 8, 4, 0.26)),
+    repeating-linear-gradient(135deg, transparent 0 0.72rem, rgba(255, 238, 202, 0.1) 0.78rem 0.82rem);
+}
+
+.discussion-slot__media figcaption {
+  position: absolute;
+  z-index: 2;
+  left: 0.6rem;
+  top: 0.6rem;
+  padding: 0.28rem 0.46rem;
+  border: 1px solid rgba(255, 235, 190, 0.38);
+  border-radius: 6px;
+  background: rgba(70, 9, 8, 0.72);
+  color: var(--gold-soft);
+  font-size: 0.74rem;
+  font-weight: 900;
 }
 
 .discussion-slot img[src$=".svg"] {
@@ -1167,9 +1214,9 @@ button:focus-visible {
   border: 1px solid rgba(255, 245, 220, 0.92);
   border-radius: 5px 13px 13px 5px;
   box-shadow:
-    inset 18px 0 34px rgba(80, 20, 10, 0.16),
+    inset 18px 0 34px rgba(80, 20, 10, 0.12),
     inset -2px 0 0 rgba(255, 255, 255, 0.34),
-    0 30px 72px rgba(0, 0, 0, 0.44);
+    0 26px 58px rgba(0, 0, 0, 0.34);
   backface-visibility: hidden;
   transform-style: preserve-3d;
   pointer-events: none;
@@ -1193,9 +1240,12 @@ button:focus-visible {
 
 .turn-sheet__image {
   background:
-    linear-gradient(90deg, rgba(53, 12, 7, 0.22), transparent 20%, rgba(255, 255, 255, 0.26) 52%, transparent 78%),
-    var(--turn-image) center / cover no-repeat;
-  filter: saturate(0.96) contrast(1.03);
+    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.48), transparent 28%),
+    linear-gradient(90deg, rgba(78, 20, 9, 0.2), transparent 17%, rgba(255, 255, 255, 0.24) 52%, transparent 82%),
+    repeating-linear-gradient(0deg, transparent 0 2rem, rgba(121, 35, 21, 0.1) 2.04rem 2.1rem),
+    linear-gradient(135deg, #fff8e9, #f1cc82 100%);
+  filter: saturate(0.98) contrast(1.02);
+  animation: pageFaceSettle 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet__back {
@@ -1213,7 +1263,7 @@ button:focus-visible {
     linear-gradient(90deg, rgba(0, 0, 0, 0.34), transparent 22%, rgba(255, 255, 255, 0.22) 48%, transparent 82%);
   mix-blend-mode: multiply;
   opacity: 0.58;
-  animation: shadeSweep 2050ms var(--ease) both;
+  animation: shadeSweep 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet__fold {
@@ -1226,7 +1276,7 @@ button:focus-visible {
   transform-origin: right center;
   mix-blend-mode: soft-light;
   opacity: 0.72;
-  animation: foldBreathe 2050ms var(--ease) both;
+  animation: foldBreathe 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet__corner {
@@ -1237,13 +1287,14 @@ button:focus-visible {
   height: 28%;
   border-radius: 0 0 0 92%;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(246, 211, 142, 0.5) 48%, rgba(91, 22, 10, 0.26)),
-    var(--turn-image) right bottom / 210% 210% no-repeat;
+    radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.7), transparent 36%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(246, 211, 142, 0.62) 48%, rgba(91, 22, 10, 0.22)),
+    linear-gradient(135deg, #fff8e9, #f1cc82);
   box-shadow:
     -0.45rem -0.55rem 1.2rem rgba(52, 11, 5, 0.28),
     inset 0.35rem 0.35rem 0.72rem rgba(255, 255, 255, 0.48);
   transform-origin: right bottom;
-  animation: cornerCurlNext 2050ms var(--ease) both;
+  animation: cornerCurlNext 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet__edge {
@@ -1253,7 +1304,7 @@ button:focus-visible {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 247, 226, 0.78), rgba(92, 24, 12, 0.32));
   filter: blur(0.2px);
-  animation: edgePressure 2050ms var(--ease) both;
+  animation: edgePressure 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet__glint {
@@ -1264,20 +1315,20 @@ button:focus-visible {
   opacity: 0;
   filter: blur(7px);
   transform: skewX(-12deg) translateX(0);
-  animation: pageGlint 2050ms var(--ease) both;
+  animation: pageGlint 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet--next {
   right: 0;
   transform-origin: left center;
-  animation: turnNext 2050ms var(--ease) both;
+  animation: turnNext 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet--prev {
   left: 0;
   border-radius: 13px 5px 5px 13px;
   transform-origin: right center;
-  animation: turnPrev 2050ms var(--ease) both;
+  animation: turnPrev 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
 }
 
 .turn-sheet--prev .turn-sheet__fold,
@@ -1320,12 +1371,28 @@ button:focus-visible {
 
 .book-settle--next {
   left: 49.6%;
-  animation: settleRight 720ms var(--ease) 1420ms both;
+  animation: settleRight 540ms var(--ease) 1240ms both;
 }
 
 .book-settle--prev {
   right: 51.2%;
-  animation: settleLeft 720ms var(--ease) 1420ms both;
+  animation: settleLeft 540ms var(--ease) 1240ms both;
+}
+
+.book-shell.is-turning--next .page--turning-source.page--visual {
+  animation: rightPageRelease 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
+}
+
+.book-shell.is-turning--prev .page--turning-source.page--text {
+  animation: leftPageRelease 1780ms cubic-bezier(0.18, 0.86, 0.18, 1) both;
+}
+
+.book-shell.is-turning--next .page--incoming.page--visual {
+  transform: rotateY(-4.6deg) translateZ(1px);
+}
+
+.book-shell.is-turning--prev .page--incoming.page--text {
+  transform: rotateY(4.6deg) translateZ(1px);
 }
 
 .stage__footer {
@@ -1455,19 +1522,90 @@ button:focus-visible {
 }
 
 @keyframes shadeSweep {
-  0% { opacity: 0.18; transform: translateX(12%) scaleX(0.72); }
-  22% { opacity: 0.64; transform: translateX(2%) scaleX(0.92); }
-  48% { opacity: 0.9; transform: translateX(-8%) scaleX(1.16); }
-  78% { opacity: 0.48; transform: translateX(-16%) scaleX(0.92); }
+  0% { opacity: 0.08; transform: translateX(14%) scaleX(0.72); }
+  24% { opacity: 0.5; transform: translateX(2%) scaleX(0.98); }
+  46% { opacity: 0.82; transform: translateX(-8%) scaleX(1.18); }
+  62% { opacity: 0.42; transform: translateX(-14%) scaleX(0.9); }
   100% { opacity: 0; transform: translateX(-24%) scaleX(0.76); }
 }
 
 @keyframes foldBreathe {
   0% { opacity: 0; transform: translateX(9%) skewY(0deg) scaleX(0.55); }
-  18% { opacity: 0.74; transform: translateX(2%) skewY(-3deg) scaleX(0.82); }
-  46% { opacity: 0.92; transform: translateX(-4%) skewY(-7deg) scaleX(1.08); }
-  72% { opacity: 0.58; transform: translateX(-7%) skewY(-3deg) scaleX(0.86); }
+  18% { opacity: 0.64; transform: translateX(2%) skewY(-3deg) scaleX(0.82); }
+  42% { opacity: 0.9; transform: translateX(-4%) skewY(-7deg) scaleX(1.08); }
+  62% { opacity: 0.46; transform: translateX(-7%) skewY(-3deg) scaleX(0.86); }
   100% { opacity: 0; transform: translateX(-12%) skewY(0deg) scaleX(0.6); }
+}
+
+@keyframes pageFaceSettle {
+  0%, 48% { opacity: 1; filter: saturate(0.98) contrast(1.02); }
+  70% { opacity: 0.58; filter: saturate(0.92) contrast(0.98) brightness(0.94); }
+  100% { opacity: 0.04; filter: saturate(0.86) contrast(0.95) brightness(0.88); }
+}
+
+@keyframes incomingPageReveal {
+  0% {
+    opacity: 0.01;
+    filter: brightness(0.88) saturate(0.92) blur(0.2px);
+  }
+  14% {
+    opacity: 0.34;
+    filter: brightness(0.92) saturate(0.94) blur(0.12px);
+  }
+  30% {
+    opacity: 0.86;
+    filter: brightness(0.98) saturate(0.98);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@keyframes rightPageRelease {
+  0%, 12% {
+    filter: none;
+    opacity: 1;
+    transform: rotateY(-4.6deg) translateZ(0);
+  }
+  26% {
+    filter: saturate(0.94) brightness(0.95);
+    opacity: 0.36;
+    transform: rotateY(-4.6deg) translateZ(-8px) translateX(0.16rem);
+  }
+  42% {
+    filter: saturate(0.88) brightness(0.9);
+    opacity: 0;
+    transform: rotateY(-4.6deg) translateZ(-24px) translateX(0.3rem);
+  }
+  100% {
+    filter: saturate(0.86) brightness(0.86);
+    opacity: 0;
+    transform: rotateY(-4.6deg) translateZ(-28px) translateX(0.3rem);
+  }
+}
+
+@keyframes leftPageRelease {
+  0%, 12% {
+    filter: none;
+    opacity: 1;
+    transform: rotateY(4.6deg) translateZ(0);
+  }
+  26% {
+    filter: saturate(0.94) brightness(0.95);
+    opacity: 0.36;
+    transform: rotateY(4.6deg) translateZ(-8px) translateX(-0.16rem);
+  }
+  42% {
+    filter: saturate(0.88) brightness(0.9);
+    opacity: 0;
+    transform: rotateY(4.6deg) translateZ(-24px) translateX(-0.3rem);
+  }
+  100% {
+    filter: saturate(0.86) brightness(0.86);
+    opacity: 0;
+    transform: rotateY(4.6deg) translateZ(-28px) translateX(-0.3rem);
+  }
 }
 
 @keyframes cornerCurlNext {
@@ -1507,33 +1645,33 @@ button:focus-visible {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
   9% {
-    transform: rotateY(-12deg) translate3d(-0.15rem, -0.08rem, 18px) skewY(-0.8deg) scaleX(0.996);
+    transform: rotateY(-10deg) translate3d(-0.12rem, -0.08rem, 18px) skewY(-0.8deg) scaleX(0.998);
     clip-path: polygon(0 0, 99% 0, 100% 99%, 0 100%);
   }
-  24% {
-    transform: rotateY(-28deg) translate3d(-0.45rem, -0.22rem, 34px) skewY(-2.2deg) scaleX(0.985);
+  28% {
+    transform: rotateY(-32deg) translate3d(-0.42rem, -0.2rem, 34px) skewY(-2deg) scaleX(0.986);
     clip-path: polygon(0 0, 96% 1%, 100% 98%, 0 100%);
   }
-  46% {
-    transform: rotateY(-62deg) translate3d(-0.78rem, -0.3rem, 56px) skewY(-5deg) scaleX(0.95);
+  44% {
+    transform: rotateY(-78deg) translate3d(-0.72rem, -0.28rem, 58px) skewY(-4.4deg) scaleX(0.946);
     box-shadow:
-      inset 30px 0 52px rgba(80, 20, 10, 0.24),
-      32px 38px 84px rgba(0, 0, 0, 0.5);
+      inset 24px 0 44px rgba(80, 20, 10, 0.2),
+      22px 30px 62px rgba(0, 0, 0, 0.42);
     clip-path: polygon(0 1%, 92% 0, 100% 96%, 0 100%);
   }
-  58% {
-    transform: rotateY(-104deg) translate3d(-0.72rem, -0.22rem, 48px) skewY(-4deg) scaleX(0.952);
-    opacity: 0.96;
+  52% {
+    transform: rotateY(-118deg) translate3d(-0.54rem, -0.18rem, 44px) skewY(-3deg) scaleX(0.962);
+    opacity: 0.92;
     clip-path: polygon(0 2%, 92% 0, 100% 97%, 0 99%);
   }
-  70% {
-    transform: rotateY(-146deg) translate3d(-0.34rem, -0.08rem, 34px) skewY(-2.4deg) scaleX(0.972);
-    opacity: 0.9;
+  68% {
+    transform: rotateY(-160deg) translate3d(-0.18rem, -0.04rem, 22px) skewY(-1.4deg) scaleX(0.986);
+    opacity: 0.72;
     clip-path: polygon(0 2%, 94% 0, 100% 98%, 0 99%);
   }
   88% {
     transform: rotateY(-176deg) translate3d(0.06rem, 0.05rem, 12px) skewY(0.6deg) scaleX(1.006);
-    opacity: 0.34;
+    opacity: 0.18;
     clip-path: polygon(0 1%, 98% 0, 100% 100%, 0 99%);
   }
   100% {
@@ -1550,33 +1688,33 @@ button:focus-visible {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
   9% {
-    transform: rotateY(12deg) translate3d(0.15rem, -0.08rem, 18px) skewY(0.8deg) scaleX(0.996);
+    transform: rotateY(10deg) translate3d(0.12rem, -0.08rem, 18px) skewY(0.8deg) scaleX(0.998);
     clip-path: polygon(1% 0, 100% 0, 100% 100%, 0 99%);
   }
-  24% {
-    transform: rotateY(28deg) translate3d(0.45rem, -0.22rem, 34px) skewY(2.2deg) scaleX(0.985);
+  28% {
+    transform: rotateY(32deg) translate3d(0.42rem, -0.2rem, 34px) skewY(2deg) scaleX(0.986);
     clip-path: polygon(4% 1%, 100% 0, 100% 100%, 0 98%);
   }
-  46% {
-    transform: rotateY(62deg) translate3d(0.78rem, -0.3rem, 56px) skewY(5deg) scaleX(0.95);
+  44% {
+    transform: rotateY(78deg) translate3d(0.72rem, -0.28rem, 58px) skewY(4.4deg) scaleX(0.946);
     box-shadow:
-      inset -30px 0 52px rgba(80, 20, 10, 0.24),
-      -32px 38px 84px rgba(0, 0, 0, 0.5);
+      inset -24px 0 44px rgba(80, 20, 10, 0.2),
+      -22px 30px 62px rgba(0, 0, 0, 0.42);
     clip-path: polygon(8% 0, 100% 1%, 100% 100%, 0 96%);
   }
-  58% {
-    transform: rotateY(104deg) translate3d(0.72rem, -0.22rem, 48px) skewY(4deg) scaleX(0.952);
-    opacity: 0.96;
+  52% {
+    transform: rotateY(118deg) translate3d(0.54rem, -0.18rem, 44px) skewY(3deg) scaleX(0.962);
+    opacity: 0.92;
     clip-path: polygon(8% 0, 100% 2%, 100% 99%, 0 97%);
   }
-  70% {
-    transform: rotateY(146deg) translate3d(0.34rem, -0.08rem, 34px) skewY(2.4deg) scaleX(0.972);
-    opacity: 0.9;
+  68% {
+    transform: rotateY(160deg) translate3d(0.18rem, -0.04rem, 22px) skewY(1.4deg) scaleX(0.986);
+    opacity: 0.72;
     clip-path: polygon(6% 0, 100% 2%, 100% 99%, 0 98%);
   }
   88% {
     transform: rotateY(176deg) translate3d(-0.06rem, 0.05rem, 12px) skewY(-0.6deg) scaleX(1.006);
-    opacity: 0.34;
+    opacity: 0.18;
     clip-path: polygon(2% 0, 100% 1%, 100% 99%, 0 100%);
   }
   100% {
@@ -1653,6 +1791,8 @@ button:focus-visible {
 
   .page--text,
   .page--visual {
+    grid-column: 1;
+    grid-row: auto;
     border-radius: 12px;
     transform: none;
   }

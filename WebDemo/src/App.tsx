@@ -42,6 +42,7 @@ type DiscussionVisual = {
   slots: Array<{
     image: string;
     fallback: string;
+    sceneLabel: string;
     title: string;
     note: string;
   }>;
@@ -105,6 +106,13 @@ type Scene = {
 };
 
 const sceneDuration = 10800;
+const flipDuration = 1780;
+
+type TurnTransition = {
+  from: number;
+  to: number;
+  direction: 'next' | 'prev';
+};
 
 const scenes: Scene[] = [
   {
@@ -282,18 +290,21 @@ const scenes: Scene[] = [
         {
           image: 'group-photo-1.jpg',
           fallback: 'photos/cuhk-reading-room.jpg',
+          sceneLabel: '读原文现场',
           title: '读原文',
           note: '从关键词圈画进入文献结构',
         },
         {
           image: 'group-photo-2.jpg',
           fallback: 'photos/chinese-books-library.jpg',
+          sceneLabel: '辨问题现场',
           title: '辨问题',
           note: '围绕两个结合和现实案例交换判断',
         },
         {
           image: 'group-photo-3.jpg',
-          fallback: 'photos/cass-building.jpg',
+          fallback: 'photos/national-library-hall.jpg',
+          sceneLabel: '定表达现场',
           title: '定表达',
           note: '把观点整理成演示、讲稿和短片',
         },
@@ -453,9 +464,9 @@ function previousIndex(index: number) {
   return (index - 1 + scenes.length) % scenes.length;
 }
 
-function TextPage({ scene }: { scene: Scene }) {
+function TextPage({ scene, className = '' }: { scene: Scene; className?: string }) {
   return (
-    <article className="page page--text">
+    <article className={`page page--text ${className}`.trim()}>
       <div className="page__meta">
         <p className="page__eyebrow">{scene.chapter}</p>
         <span>{scene.slideRange}</span>
@@ -543,23 +554,26 @@ function DiscussionVisualPage({ visual }: { visual: DiscussionVisual }) {
   return (
     <div className="discussion-board">
       <div className="discussion-board__title">
-        <span>线下共读</span>
-        <strong>把真实过程放进汇报</strong>
+        <span>线下讨论</span>
+        <strong>共读现场记录</strong>
       </div>
       <div className="discussion-grid">
         {visual.slots.map((slot) => (
-          <article key={slot.title} className="discussion-slot">
-            <img
-              src={asset(slot.image)}
-              alt={slot.title}
-              onError={(event) => {
-                const image = event.currentTarget;
-                if (!image.dataset.fallbackApplied) {
-                  image.dataset.fallbackApplied = 'true';
-                  image.src = asset(slot.fallback);
-                }
-              }}
-            />
+          <article key={slot.title} className="discussion-slot discussion-slot--scene">
+            <figure className="discussion-slot__media">
+              <img
+                src={asset(slot.image)}
+                alt={slot.title}
+                onError={(event) => {
+                  const image = event.currentTarget;
+                  if (!image.dataset.fallbackApplied) {
+                    image.dataset.fallbackApplied = 'true';
+                    image.src = asset(slot.fallback);
+                  }
+                }}
+              />
+              <figcaption>{slot.sceneLabel}</figcaption>
+            </figure>
             <div>
               <h3>{slot.title}</h3>
               <p>{slot.note}</p>
@@ -633,11 +647,11 @@ function SummaryVisualPage({ visual }: { visual: SummaryVisual }) {
   );
 }
 
-function VisualPage({ scene }: { scene: Scene }) {
+function VisualPage({ scene, className = '' }: { scene: Scene; className?: string }) {
   const visual = scene.visual;
 
   return (
-    <article className="page page--visual">
+    <article className={`page page--visual ${className}`.trim()}>
       {visual.type === 'image' && <ImageVisualPage visual={visual} />}
       {visual.type === 'timeline' && <TimelineVisualPage visual={visual} />}
       {visual.type === 'diptych' && <DiptychVisualPage visual={visual} />}
@@ -654,23 +668,36 @@ function App() {
   const [activeScene, setActiveScene] = useState(getInitialScene);
   const [isPlaying, setIsPlaying] = useState(() => !new URLSearchParams(window.location.search).has('scene'));
   const [flipTick, setFlipTick] = useState(0);
-  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [transition, setTransition] = useState<TurnTransition | null>(null);
 
   const scene = scenes[activeScene];
 
   const goToScene = (index: number, nextDirection: 'next' | 'prev') => {
-    setDirection(nextDirection);
-    setActiveScene(index);
+    if (transition || index === activeScene) return;
+    setTransition({
+      from: activeScene,
+      to: index,
+      direction: nextDirection,
+    });
     setFlipTick((tick) => tick + 1);
   };
 
   useEffect(() => {
-    if (!isPlaying) return undefined;
-    const timer = window.setInterval(() => {
+    if (!isPlaying || transition) return undefined;
+    const timer = window.setTimeout(() => {
       goToScene(nextIndex(activeScene), 'next');
     }, sceneDuration);
-    return () => window.clearInterval(timer);
-  }, [activeScene, isPlaying]);
+    return () => window.clearTimeout(timer);
+  }, [activeScene, isPlaying, transition]);
+
+  useEffect(() => {
+    if (!transition) return undefined;
+    const timer = window.setTimeout(() => {
+      setActiveScene(transition.to);
+      setTransition(null);
+    }, flipDuration);
+    return () => window.clearTimeout(timer);
+  }, [transition]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -688,11 +715,15 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeScene]);
+  }, [activeScene, transition]);
 
   const progressLabel = useMemo(() => {
     return `${activeScene + 1} / ${scenes.length}`;
   }, [activeScene]);
+
+  const turnScene = transition ? scenes[transition.from] : scene;
+  const incomingScene = transition ? scenes[transition.to] : null;
+  const turnDirection = transition?.direction ?? 'next';
 
   return (
     <main className="showcase" aria-label="守正创新经典品读自动演示">
@@ -729,35 +760,60 @@ function App() {
         </header>
 
         <div className="book-stage">
-          <div className="book-shell" aria-label={`${scene.chapter} ${scene.title}`}>
+          <div
+            className={transition ? `book-shell is-turning is-turning--${turnDirection}` : 'book-shell'}
+            aria-label={`${scene.chapter} ${scene.title}`}
+          >
             <div className="book-shadow" aria-hidden="true" />
             <div className="page-stack page-stack--left" aria-hidden="true" />
             <div className="page-stack page-stack--right" aria-hidden="true" />
-            <TextPage key={`text-${activeScene}`} scene={scene} />
-            <VisualPage key={`visual-${activeScene}`} scene={scene} />
+            {incomingScene && turnDirection === 'prev' && (
+              <TextPage key={`incoming-text-${transition?.to ?? activeScene}`} scene={incomingScene} className="page--incoming" />
+            )}
+            {incomingScene && turnDirection === 'next' && (
+              <VisualPage key={`incoming-visual-${transition?.to ?? activeScene}`} scene={incomingScene} className="page--incoming" />
+            )}
+            <TextPage
+              key={`text-${activeScene}`}
+              scene={scene}
+              className={turnDirection === 'prev' && transition ? 'page--turning-source' : ''}
+            />
+            <VisualPage
+              key={`visual-${activeScene}`}
+              scene={scene}
+              className={turnDirection === 'next' && transition ? 'page--turning-source' : ''}
+            />
             <div className="book-spine" aria-hidden="true" />
-            <div
-              key={`${flipTick}-${direction}`}
-              className={`turn-sheet turn-sheet--${direction}`}
-              style={{ '--turn-image': `url("${asset(scene.turnImage)}")` } as React.CSSProperties}
-              aria-hidden="true"
-            >
-              <span className="turn-sheet__image" />
-              <span className="turn-sheet__back" />
-              <span className="turn-sheet__shade" />
-              <span className="turn-sheet__fold" />
-              <span className="turn-sheet__corner" />
-              <span className="turn-sheet__edge" />
-              <span className="turn-sheet__glint" />
-            </div>
-            <div key={`settle-${flipTick}`} className={`book-settle book-settle--${direction}`} aria-hidden="true" />
+            {transition && (
+              <>
+                <div
+                  key={`${flipTick}-${transition.from}-${transition.to}`}
+                  className={`turn-sheet turn-sheet--${turnDirection}`}
+                  style={{ '--turn-image': `url("${asset(turnScene.turnImage)}")` } as React.CSSProperties}
+                  aria-hidden="true"
+                >
+                  <span className="turn-sheet__image" />
+                  <span className="turn-sheet__back" />
+                  <span className="turn-sheet__shade" />
+                  <span className="turn-sheet__fold" />
+                  <span className="turn-sheet__corner" />
+                  <span className="turn-sheet__edge" />
+                  <span className="turn-sheet__glint" />
+                </div>
+                <div
+                  key={`settle-${flipTick}`}
+                  className={`book-settle book-settle--${turnDirection}`}
+                  aria-hidden="true"
+                />
+              </>
+            )}
           </div>
         </div>
 
         <footer className="stage__footer">
           <p className="narration">{scene.cue}</p>
           <div className="controls" aria-label="演示控制">
-            <button type="button" onClick={() => goToScene(previousIndex(activeScene), 'prev')}>
+            <button type="button" onClick={() => goToScene(previousIndex(activeScene), 'prev')} disabled={!!transition}>
               上一章
             </button>
             <button
@@ -768,7 +824,7 @@ function App() {
             >
               {isPlaying ? '停留' : '继续'}
             </button>
-            <button type="button" onClick={() => goToScene(nextIndex(activeScene), 'next')}>
+            <button type="button" onClick={() => goToScene(nextIndex(activeScene), 'next')} disabled={!!transition}>
               下一章
             </button>
           </div>
@@ -781,6 +837,7 @@ function App() {
               key={item.chapter}
               className={index === activeScene ? 'is-active' : ''}
               onClick={() => goToScene(index, index >= activeScene ? 'next' : 'prev')}
+              disabled={!!transition}
               aria-label={`跳转到${item.chapter}`}
             >
               <span
