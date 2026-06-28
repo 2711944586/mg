@@ -106,7 +106,7 @@ type Scene = {
 };
 
 const sceneDuration = 10800;
-const turnDuration = 1680;
+const turnDuration = 1380;
 
 type TurnInstance = {
   turn: (...args: unknown[]) => unknown;
@@ -813,7 +813,7 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
       gradients: true,
       acceleration: true,
       duration: turnDuration,
-      elevation: 118,
+      elevation: 36,
     });
     instance.turn('disable', true);
 
@@ -822,31 +822,12 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
 
     let clearTurnTimer: number | null = null;
 
-    const clearMutedPages = () => {
-      element.querySelectorAll('.is-muted-under-turn').forEach((node) => {
-        node.classList.remove('is-muted-under-turn');
-      });
-    };
-
-    const readViewPages = () => {
-      const view = instance.turn('view');
-      return Array.isArray(view)
-        ? view.map((page) => Number(page)).filter((page) => Number.isFinite(page) && page > 0)
-        : [];
-    };
-
-    const mutePage = (page?: number) => {
-      if (!page) return;
-      element.querySelector(`.turn-page-wrapper[page="${page}"]`)?.classList.add('is-muted-under-turn');
-    };
-
     const clearTurnState = () => {
       if (clearTurnTimer) {
         window.clearTimeout(clearTurnTimer);
         clearTurnTimer = null;
       }
       element.classList.remove('is-turning', 'is-turning-forward', 'is-turning-backward');
-      clearMutedPages();
     };
 
     const markTurnState = (_event: unknown, target?: unknown) => {
@@ -856,14 +837,11 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
       }
 
       const currentPage = Number(instance.turn('page'));
-      const currentView = readViewPages();
       const nextPage = typeof target === 'object' && target !== null && 'next' in target
         ? Number((target as { next?: unknown }).next)
         : Number(target);
       const isBackward = Number.isFinite(nextPage) && nextPage < currentPage;
 
-      clearMutedPages();
-      mutePage(isBackward ? currentView[currentView.length - 1] : currentView[0]);
       element.classList.remove('is-turning-forward', 'is-turning-backward');
       element.classList.add('is-turning', isBackward ? 'is-turning-backward' : 'is-turning-forward');
     };
