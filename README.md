@@ -2,7 +2,7 @@
 
 项目主题：**守正创新何以开辟新境界——《开辟马克思主义中国化时代化新境界》经典品读汇报**
 
-本仓库包含课堂汇报所需的 PPT、讲稿、活动总结、素材说明和 WebDemo 自动翻书演示。当前汇报时长按 **10分30秒** 设计，线上演示已适配 GitHub Pages 子路径 `/mg/`。
+本仓库包含课堂汇报所需的 PPT、讲稿、过程文档、素材说明和 WebDemo 翻书演示。当前汇报时长按 **10分30秒** 设计，线上演示适配 GitHub Pages 子路径 `/mg/`。
 
 ## 目录结构
 
@@ -11,33 +11,30 @@ classic-reading-project/
 ├── README.md
 ├── .github/workflows/deploy-pages.yml
 ├── deliverables/
-│   ├── 守正创新经典品读汇报.pptx
-│   └── 汇报讲稿.docx
 ├── docs/
-│   ├── PLAN.md
-│   ├── PPT大纲与逐页文案.md
-│   ├── 汇报讲稿.md
-│   ├── 经典品读活动总结.md
-│   ├── 主题短片脚本与分镜.md
-│   └── 素材清单.md
 ├── scripts/
-│   └── build_deliverables.py
 └── WebDemo/
-    ├── package.json
     ├── index.html
-    ├── public/
-    │   ├── favicon.svg
-    │   ├── reading-hero.png
-    │   ├── red-motion-bg.mp4
-    │   ├── photos/
-    │   └── vendor/
-    └── src/
-        ├── App.tsx
-        ├── main.tsx
-        └── style.css
+    ├── package.json
+    ├── vite.config.ts
+    └── public/
+        ├── assets/
+        │   ├── css/styles.css
+        │   ├── js/book.js
+        │   ├── fonts/
+        │   ├── photos/
+        │   ├── reading-hero.png
+        │   └── red-motion-bg.mp4
+        ├── lib/
+        │   ├── turn.min.js
+        │   └── turnjs-license.txt
+        ├── samples/steve-jobs/
+        └── vendor/jquery-1.7.2.min.js
 ```
 
 ## WebDemo
+
+WebDemo 已改为纯静态 Vite 站点，页面结构和翻页逻辑按参考 zip 里的 `turn.js 4.1.0` 示例迁入：`#book.sj-book`、硬封面、目录页、页深、书脊、开场倒翻动画都由原生 turn.js 驱动，不再通过 React 状态控制翻页。
 
 本地运行：
 
@@ -62,45 +59,34 @@ https://2711944586.github.io/mg/
 
 演示控制：
 
-- 默认自动播放，每章约 10.8 秒。
-- 空格键或“停留/继续”控制播放。
-- 左右方向键或“上一章/下一章”切换章节。
-- 底部进度条可直接跳转章节。
-
-## 汇报材料
-
-- `deliverables/守正创新经典品读汇报.pptx`：正式 PPT。
-- `deliverables/汇报讲稿.docx`：Word 版讲稿。
-- `docs/PPT大纲与逐页文案.md`：12 页 PPT 文案与设计说明。
-- `docs/汇报讲稿.md`：10分30秒口语稿。
-- `docs/经典品读活动总结.md`：活动总结与现场照片说明。
-- `docs/主题短片脚本与分镜.md`：45-60 秒主题短片脚本。
-- `docs/素材清单.md`：PPT、WebDemo、短片素材说明。
-- `WebDemo/public/photos/CREDITS.md`：公共图片来源记录。
+- 打开页面后自动执行参考 zip 同款开场翻书。
+- 左右方向键可翻到上一页或下一页。
+- 书本左右边缘透明热区可点击翻页。
+- 目录页可直接跳转到对应章节。
 
 ## 小组照片
 
-WebDemo 的“线下讨论”章节使用三张真实现场照片：
+WebDemo 的共读现场章节使用三张真实照片：
 
 ```text
-WebDemo/public/photos/discussion-reading.jpg
-WebDemo/public/photos/discussion-notes.jpg
-WebDemo/public/photos/discussion-review.jpg
+WebDemo/public/assets/photos/discussion-reading.jpg
+WebDemo/public/assets/photos/discussion-notes.jpg
+WebDemo/public/assets/photos/discussion-review.jpg
 ```
 
-如需替换，保持文件名不变即可。建议三张照片分别对应“读原文”“辨问题”“定表达”，画面要自然、清晰、能看出真实讨论过程。根目录不保留微信原图或临时图片。
+如需替换，保持文件名不变即可。根目录不保留微信原图或临时图片。
 
 ## 翻书插件
 
-WebDemo 已本地化接入 `turn.js`：
+WebDemo 本地化接入参考 zip 中的原版文件：
 
 ```text
 WebDemo/public/vendor/jquery-1.7.2.min.js
-WebDemo/public/vendor/turn.min.js
-WebDemo/public/vendor/turnjs-license.txt
+WebDemo/public/lib/turn.min.js
+WebDemo/public/samples/steve-jobs/
 ```
 
-应用运行时会从 `/vendor/` 顺序加载官方示例同款 jQuery 1.7.2 和 `turn.js 4.1.0`，不依赖外部 CDN，适合 GitHub Pages 静态部署。翻页动画由插件原生 `display: "double"`、`gradients`、`elevation`、`page`、`next` 驱动；样式层负责书页质感、页叠厚度和舞台排版，并保留插件生成的折页层。
+`turn.min.js` 与参考 zip 中的 `lib/turn.min.js` 保持一致；书页尺寸、书脊素材、页纹素材和开场翻阅节奏均按参考项目组织。字体使用本地化的 Noto Serif SC 字体文件，保留当前项目的中文纸本阅读质感。
 
 ## 部署
 
@@ -139,7 +125,7 @@ WebDemo/public/vendor/turnjs-license.txt
 
 ## 自检
 
-- WebDemo：红色动态背景、真实图片、自动翻书、线下讨论板块、静态部署。
-- 字体：标题使用宋楷气质字体栈，正文使用更像纸本文稿的中文阅读字体栈。
-- 动画：翻页由本地官方 `turn.js` 插件驱动，按钮、方向键和自动播放负责章节节奏；桌面端和移动端均已验证上一章/下一章可用。
-- 文件：交付物在 `deliverables/`，过程文档在 `docs/`，WebDemo 源码和素材在 `WebDemo/`。
+- WebDemo：红色动态背景、真实图片、开场翻书、共读现场板块、静态部署。
+- 字体：本地中文衬线字体，避免浏览器默认字体导致的发虚和粗糙。
+- 动画：翻页由参考 zip 同款 `turn.js` 原生驱动，书脊、页深、硬封面和页纹素材与示例一致。
+- 文件：交付物在 `deliverables/`，过程文档在 `docs/`，WebDemo 源码和素材集中在 `WebDemo/`。

@@ -1,17 +1,73 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="守正创新何以开辟新境界经典品读 WebDemo"
-    />
-    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
-    <title>守正创新何以开辟新境界</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="守正创新可以开辟新境界经典品读翻书">
+  <style>
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #130004;
+    }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="%BASE_URL%assets/favicon.svg">
+  <title>守正创新可以开辟新境界</title>
+  <link rel="stylesheet" href="%BASE_URL%samples/steve-jobs/css/steve-jobs.css">
+  <link rel="stylesheet" href="%BASE_URL%assets/css/styles.css">
+</head>
+<body>
+  <video class="motion-video" autoplay muted loop playsinline poster="%BASE_URL%assets/reading-hero.png" aria-hidden="true">
+    <source src="%BASE_URL%assets/red-motion-bg.mp4" type="video/mp4">
+  </video>
+  <div class="motion-overlay" aria-hidden="true"></div>
+  <div class="china-atmosphere" aria-hidden="true"></div>
+
+  <main class="stage">
+    <section class="book-shell" aria-label="守正创新翻书">
+      <div id="book-zoom">
+        <div id="book" class="sj-book sj-book-transform">
+          <div depth="5" class="hard">
+            <div class="cover-face">
+              <div class="cover-rule"></div>
+              <p>经典品读</p>
+              <h1>守正创新</h1>
+              <h2>在翻阅中回到问题，也回到时代现场</h2>
+              <div class="cover-rule"></div>
+            </div>
+            <div class="side"></div>
+          </div>
+          <div depth="5" class="hard front-side">
+            <div class="blank-red-page" aria-hidden="true"></div>
+            <div class="depth"></div>
+          </div>
+          <div class="own-size contents-page">
+            <article class="contents-panel">
+              <p class="contents-kicker">目录</p>
+              <h1>经典品读路线</h1>
+              <nav aria-label="目录">
+                <button type="button" data-page="4"><span>01</span><strong>从一个问题翻开经典</strong><em>4</em></button>
+                <button type="button" data-page="6"><span>02</span><strong>理论在回答中国问题中生长</strong><em>6</em></button>
+                <button type="button" data-page="8"><span>03</span><strong>守正创新不是两选一</strong><em>8</em></button>
+                <button type="button" data-page="10"><span>04</span><strong>两个结合让理论扎根中国</strong><em>10</em></button>
+                <button type="button" data-page="12"><span>05</span><strong>问题导向让理论进入现实</strong><em>12</em></button>
+                <button type="button" data-page="14"><span>06</span><strong>几张照片里的共读现场</strong><em>14</em></button>
+                <button type="button" data-page="16"><span>07</span><strong>数字展厅服务思想表达</strong><em>16</em></button>
+                <button type="button" data-page="18"><span>08</span><strong>从理论自觉到实践担当</strong><em>18</em></button>
+                <button type="button" data-page="20"><span>09</span><strong>用三句话收束整套汇报</strong><em>20</em></button>
+              </nav>
+            </article>
+          </div>
+        </div>
+        <button id="previous" class="page-hotspot page-hotspot--prev" type="button" aria-label="上一页"></button>
+        <button id="next" class="page-hotspot page-hotspot--next" type="button" aria-label="下一页"></button>
+      </div>
+    </section>
+  </main>
+
+  <script src="%BASE_URL%vendor/jquery-1.7.2.min.js"></script>
+  <script src="%BASE_URL%lib/turn.min.js"></script>
+  <script src="%BASE_URL%assets/js/book.js"></script>
+</body>
 </html>

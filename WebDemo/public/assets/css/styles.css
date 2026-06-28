@@ -1,0 +1,918 @@
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("../fonts/noto-serif-sc-chinese-simplified-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url("../fonts/noto-serif-sc-chinese-simplified-500-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("../fonts/noto-serif-sc-chinese-simplified-600-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("../fonts/noto-serif-sc-chinese-simplified-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 900;
+  src: url("../fonts/noto-serif-sc-chinese-simplified-900-normal.woff2") format("woff2");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: #f3efe6;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, Georgia, "Times New Roman", serif;
+  background:
+    linear-gradient(118deg, rgba(255, 205, 104, 0.12), transparent 20% 74%, rgba(255, 221, 142, 0.09)),
+    linear-gradient(142deg, #130004, #6d0710 47%, #250106 100%);
+  overflow: hidden;
+  isolation: isolate;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+}
+
+body::before {
+  inset: -18% -10%;
+  z-index: -4;
+  opacity: 0.28;
+  background:
+    linear-gradient(104deg, transparent 0 23%, rgba(255, 227, 159, 0.16) 31%, rgba(175, 18, 20, 0.24) 42%, transparent 56%),
+    linear-gradient(112deg, transparent 0 42%, rgba(255, 244, 202, 0.12) 48%, transparent 58%),
+    repeating-linear-gradient(90deg, rgba(255, 238, 182, 0.04) 0 1px, transparent 1px 7px);
+  filter: blur(4px);
+  transform: rotate(-5deg);
+}
+
+body::after {
+  inset: 0;
+  z-index: -3;
+  opacity: 0.18;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 246, 216, 0.04) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(90deg, rgba(255, 222, 150, 0.035) 0 1px, transparent 1px 6px);
+  mix-blend-mode: screen;
+}
+
+.motion-video {
+  position: fixed;
+  inset: 0;
+  z-index: -8;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.42) contrast(1.12) brightness(0.44) sepia(0.06);
+  transform: scale(1.08);
+  opacity: 0.88;
+}
+
+.motion-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -7;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(16, 0, 4, 0.8), rgba(72, 4, 9, 0.24) 48%, rgba(16, 0, 4, 0.8)),
+    linear-gradient(180deg, rgba(10, 0, 2, 0.64), rgba(93, 7, 12, 0.1) 44%, rgba(10, 0, 2, 0.68));
+}
+
+.motion-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  opacity: 0.3;
+  background:
+    conic-gradient(from 136deg at 22% 42%, transparent, rgba(255, 211, 139, 0.2), transparent 22%),
+    linear-gradient(112deg, transparent 0 31%, rgba(255, 224, 154, 0.36) 36%, rgba(158, 12, 17, 0.26) 41%, transparent 49% 100%),
+    linear-gradient(74deg, transparent 0 50%, rgba(255, 236, 185, 0.16) 58%, transparent 65%);
+  filter: blur(3px);
+}
+
+.motion-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  background:
+    repeating-linear-gradient(118deg, transparent 0 1.4rem, rgba(255, 226, 154, 0.07) 1.52rem 1.58rem),
+    linear-gradient(108deg, transparent 0 24%, rgba(255, 221, 142, 0.12) 36%, transparent 52% 100%),
+    radial-gradient(ellipse at center, rgba(255, 238, 190, 0.11), transparent 58%);
+  background-size: 26rem 26rem, 100% 100%, 100% 100%;
+  mask-image: radial-gradient(ellipse at center, black 0 50%, transparent 84%);
+}
+
+.china-atmosphere {
+  position: fixed;
+  inset: -4%;
+  z-index: -6;
+  pointer-events: none;
+  background-image: url("../photos/china-flag-beijing.jpg");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.18;
+  filter: saturate(1.34) contrast(1.08) brightness(0.64);
+  mix-blend-mode: soft-light;
+  transform: scale(1.04);
+  mask-image:
+    linear-gradient(90deg, transparent, black 18% 78%, transparent),
+    radial-gradient(ellipse at 56% 42%, black 0 46%, transparent 76%);
+}
+
+.china-atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(76, 4, 9, 0.8), transparent 48%, rgba(76, 4, 9, 0.86)),
+    linear-gradient(180deg, rgba(76, 4, 9, 0.36), transparent 36%, rgba(76, 4, 9, 0.42));
+}
+
+.stage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.book-shell {
+  width: min(1133px, 96vw);
+  height: min(708px, 90vh);
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 28px 45px rgba(0, 0, 0, 0.55));
+}
+
+#book-zoom {
+  position: relative;
+  width: 960px;
+  height: 600px;
+  transform-origin: center center;
+  transform: scale(1.18);
+  opacity: 0;
+  transform: scale(1.18) translateY(8px);
+  transition: opacity 320ms ease, transform 420ms ease;
+}
+
+.book-shell.is-ready #book-zoom {
+  opacity: 1;
+  transform: scale(1.18) translateY(0);
+  transition: opacity 320ms ease, transform 420ms ease;
+}
+
+.sj-book {
+  margin: 0 auto;
+}
+
+.sj-book .blank-page {
+  position: relative;
+}
+
+.sj-book .blank-page:before {
+  content: "";
+  position: absolute;
+  inset: 44px 42px 56px;
+  border-top: 1px solid rgba(90, 70, 45, 0.08);
+  border-bottom: 1px solid rgba(90, 70, 45, 0.08);
+}
+
+.sj-book .mg-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 28px 28px 42px;
+  color: #37110b;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+  background:
+    radial-gradient(circle at 28% 16%, rgba(255, 255, 255, 0.82), transparent 34%),
+    linear-gradient(90deg, rgba(92, 32, 16, 0.08), transparent 13% 88%, rgba(92, 32, 16, 0.05)),
+    linear-gradient(135deg, #fff1dc 0%, #fff8df 34%, #f9e8bc 100%);
+}
+
+.sj-book .mg-page:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 50%, rgba(118, 47, 20, 0.08), transparent 32%),
+    linear-gradient(90deg, rgba(92, 33, 16, 0.16), transparent 16% 84%, rgba(92, 33, 16, 0.08)),
+    repeating-linear-gradient(0deg, rgba(93, 41, 18, 0.032) 0 1px, transparent 1px 6px);
+}
+
+.sj-book .mg-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sj-book .mg-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #8e1a14;
+  font-weight: 700;
+}
+
+.sj-book .mg-meta span {
+  font-size: 16px;
+}
+
+.sj-book .mg-meta em {
+  padding: 6px 10px;
+  border: 1px solid rgba(142, 26, 20, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.34);
+  font-size: 16px;
+  font-style: normal;
+  color: #70180f;
+}
+
+.sj-book .mg-page h1 {
+  margin: 0 0 8px;
+  color: #491409;
+  font-size: 34px;
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.sj-book .mg-thesis {
+  margin: 0 0 10px;
+  color: rgba(42, 12, 7, 0.94);
+  font-size: 20px;
+  line-height: 1.42;
+  font-weight: 700;
+  text-indent: 0;
+}
+
+.sj-book .mg-page ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sj-book .mg-page li {
+  position: relative;
+  padding: 8px 12px 8px 24px;
+  border-radius: 6px;
+  background: rgba(255, 250, 232, 0.74);
+  color: rgba(42, 12, 7, 0.93);
+  font-size: 17px;
+  line-height: 1.34;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(112, 48, 16, 0.05);
+}
+
+.sj-book .mg-page li:before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 17px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #921912;
+}
+
+.sj-book .mg-page blockquote {
+  margin: 10px 0 0;
+  padding: 8px 12px;
+  border-left: 4px solid #921912;
+  border-radius: 0 6px 6px 0;
+  background: rgba(255, 248, 225, 0.66);
+  color: #551006;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.sj-book .mg-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.sj-book .mg-tags span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(143, 16, 20, 0.1);
+  color: #821710;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sj-book .mg-page-visual {
+  padding: 20px;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(255, 244, 206, 0.82), transparent 30%),
+    linear-gradient(135deg, #f8c969 0%, #f6d17b 48%, #f1bf55 100%);
+}
+
+.sj-book .mg-photo,
+.sj-book .mg-pair figure {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #3b0d06;
+  box-shadow:
+    0 14px 30px rgba(72, 16, 6, 0.22),
+    inset 0 0 0 1px rgba(255, 241, 207, 0.28);
+}
+
+.sj-book .mg-photo img,
+.sj-book .mg-pair img,
+.sj-book .mg-card-grid img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.sj-book .mg-photo figcaption,
+.sj-book .mg-pair figcaption {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(63, 9, 12, 0.82);
+  color: #fff4d0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.sj-book .mg-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 14px;
+  height: 100%;
+}
+
+.sj-book .mg-pair figcaption strong,
+.sj-book .mg-pair figcaption span {
+  display: block;
+}
+
+.sj-book .mg-pair figcaption span {
+  margin-top: 3px;
+  color: rgba(255, 232, 178, 0.9);
+  font-size: 16px;
+}
+
+.sj-book .mg-timeline {
+  display: grid;
+  gap: 12px;
+  height: 100%;
+  align-content: center;
+}
+
+.sj-book .mg-timeline section {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 12px;
+  align-items: center;
+  min-height: 90px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 241, 202, 0.74);
+  box-shadow: inset 0 0 0 1px rgba(122, 24, 14, 0.1);
+  overflow: visible;
+}
+
+.sj-book .mg-timeline b {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #8f170f;
+  color: #ffe7ad;
+  font-size: 16px;
+}
+
+.sj-book .mg-timeline strong {
+  color: #8e1a14;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.sj-book .mg-timeline h2 {
+  margin: 2px 0 3px;
+  color: #451008;
+  font-size: 20px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.sj-book .mg-timeline p {
+  margin: 0;
+  color: rgba(48, 16, 11, 0.78);
+  font-size: 15px;
+  line-height: 1.22;
+}
+
+.sj-book .mg-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: 100%;
+}
+
+.sj-book .mg-page-timeline {
+  padding: 22px 24px;
+}
+
+.sj-book .mg-page-timeline .mg-timeline {
+  align-content: space-between;
+  gap: 10px;
+}
+
+.sj-book .mg-page-discussion .mg-card-grid {
+  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+}
+
+.sj-book .mg-page-discussion .mg-card-grid section:first-child {
+  grid-row: 1 / 3;
+}
+
+.sj-book .mg-page-discussion .mg-card-grid section {
+  min-height: 0;
+}
+
+.sj-book .mg-page-discussion .mg-card-grid strong {
+  font-size: 24px;
+}
+
+.sj-book .mg-page-discussion .mg-card-grid p {
+  font-size: 16px;
+  line-height: 1.36;
+}
+
+.sj-book .mg-card-grid section {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #3b0d06;
+  color: #fff4d0;
+}
+
+.sj-book .mg-card-grid section:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 0, 4, 0.05) 20%, rgba(20, 0, 4, 0.78));
+}
+
+.sj-book .mg-card-grid div {
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(63, 9, 12, 0.78);
+}
+
+.sj-book .mg-card-grid strong {
+  display: block;
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+.sj-book .mg-card-grid p {
+  margin: 3px 0 0;
+  color: rgba(255, 232, 178, 0.9);
+  font-size: 15px;
+  line-height: 1.28;
+}
+
+.sj-book .mg-visual-title {
+  display: none;
+}
+
+.sj-book .mg-visual-title span {
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: rgba(70, 9, 8, 0.8);
+  color: #ffe7ad;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sj-book .mg-visual-title strong {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(70, 9, 8, 0.66);
+  color: #fff4d0;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.sj-book .dynamic-back,
+.sj-book .dynamic-last {
+  background-color: #5b0308;
+  background-image:
+    radial-gradient(circle at 28% 18%, rgba(255, 232, 170, 0.09), transparent 24%),
+    radial-gradient(circle at 82% 68%, rgba(255, 232, 170, 0.07), transparent 26%),
+    linear-gradient(110deg, rgba(255, 240, 190, 0.08), transparent 17% 78%, rgba(0, 0, 0, 0.22)),
+    repeating-linear-gradient(78deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 5px),
+    linear-gradient(135deg, #8f2b1f 0%, #69060c 45%, #3b0005 100%) !important;
+}
+
+.sj-book .dynamic-back {
+  background-position: 0 0 !important;
+}
+
+.sj-book .dynamic-last {
+  background-position: 0 0 !important;
+}
+
+.sj-book .p1,
+.sj-book .p2 {
+  background-color: #5b0308 !important;
+  background-image:
+    radial-gradient(circle at 28% 18%, rgba(255, 232, 170, 0.1), transparent 24%),
+    radial-gradient(circle at 82% 68%, rgba(255, 232, 170, 0.07), transparent 26%),
+    linear-gradient(110deg, rgba(255, 240, 190, 0.08), transparent 17% 78%, rgba(0, 0, 0, 0.24)),
+    repeating-linear-gradient(78deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 5px),
+    linear-gradient(135deg, #8f2b1f 0%, #69060c 45%, #3b0005 100%) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 232, 176, 0.55),
+    inset 12px 0 24px rgba(0, 0, 0, 0.28),
+    inset -8px 0 20px rgba(255, 219, 145, 0.08) !important;
+}
+
+.sj-book .p2 {
+  background-position: 0 0 !important;
+}
+
+.sj-book .cover-face {
+  position: absolute;
+  inset: 18px;
+  z-index: 5;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 13px;
+  padding: 40px 38px;
+  border: 1px solid rgba(255, 232, 176, 0.62);
+  border-radius: 3px;
+  color: #fff0bf;
+  text-align: center;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+  background:
+    linear-gradient(180deg, rgba(255, 238, 186, 0.03), transparent 50%, rgba(0, 0, 0, 0.08));
+  pointer-events: none;
+}
+
+.sj-book .cover-face:before,
+.sj-book .cover-face:after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: rgba(255, 232, 176, 0.65);
+  border-style: solid;
+}
+
+.sj-book .cover-face:before {
+  left: 12px;
+  top: 12px;
+  border-width: 1px 0 0 1px;
+}
+
+.sj-book .cover-face:after {
+  right: 12px;
+  bottom: 12px;
+  border-width: 0 1px 1px 0;
+}
+
+.sj-book .cover-face p {
+  margin: 0;
+  color: #ffefbd;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.sj-book .cover-face h1 {
+  margin: 0;
+  color: #fff1bd;
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-shadow:
+    0 1px 0 rgba(70, 4, 3, 0.65),
+    0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.sj-book .cover-face h2 {
+  margin: 0;
+  color: rgba(255, 240, 196, 0.95);
+  font-size: 18px;
+  line-height: 1.45;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.sj-book .cover-rule {
+  width: 72%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 232, 176, 0.78), transparent);
+}
+
+.sj-book .cover-face--inside {
+  opacity: 0.72;
+}
+
+.sj-book .cover-face--inside h1 {
+  font-size: 42px;
+}
+
+.sj-book .blank-red-page {
+  position: absolute;
+  inset: 18px;
+  z-index: 5;
+  border: 1px solid rgba(255, 232, 176, 0.48);
+  border-radius: 3px;
+  background:
+    linear-gradient(135deg, rgba(255, 238, 186, 0.035), transparent 42%),
+    repeating-linear-gradient(78deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 5px);
+  pointer-events: none;
+}
+
+.sj-book .blank-red-page:before,
+.sj-book .blank-red-page:after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: rgba(255, 232, 176, 0.55);
+  border-style: solid;
+}
+
+.sj-book .blank-red-page:before {
+  left: 12px;
+  top: 12px;
+  border-width: 1px 0 0 1px;
+}
+
+.sj-book .blank-red-page:after {
+  right: 12px;
+  bottom: 12px;
+  border-width: 0 1px 1px 0;
+}
+
+.sj-book .contents-page {
+  background:
+    radial-gradient(circle at 28% 16%, rgba(255, 255, 255, 0.84), transparent 32%),
+    linear-gradient(90deg, rgba(95, 35, 18, 0.12), transparent 14% 92%, rgba(95, 35, 18, 0.04)),
+    linear-gradient(135deg, #fff5df 0%, #fff9e7 48%, #f2dba5 100%) !important;
+}
+
+.sj-book .contents-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 42px 44px 46px;
+  color: #3b130c;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+  pointer-events: auto;
+}
+
+.sj-book .contents-kicker {
+  margin: 0;
+  color: #981811;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.sj-book .contents-panel h1 {
+  margin: 8px 0 24px;
+  color: #431108;
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.sj-book .contents-panel nav {
+  display: grid;
+  gap: 7px;
+}
+
+.sj-book .contents-panel button {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 36px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #3b130c;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.sj-book .contents-panel button:hover {
+  background: rgba(151, 24, 17, 0.12);
+  transform: translateX(2px);
+}
+
+.sj-book .contents-panel button span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 28px;
+  border-radius: 8px;
+  background: #9b1810;
+  color: #ffe7ad;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sj-book .contents-panel button strong {
+  min-width: 0;
+  color: #3b130c;
+  font-size: 16px;
+  line-height: 1.24;
+  font-weight: 700;
+}
+
+.sj-book .contents-panel button em {
+  color: rgba(59, 19, 12, 0.72);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.sj-book .page-wrapper,
+.sj-book .turn-page {
+  pointer-events: auto;
+}
+
+.page-hotspot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 100000;
+  width: 104px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.page-hotspot--prev {
+  left: -18px;
+}
+
+.page-hotspot--next {
+  right: -18px;
+}
+
+.page-hotspot:focus-visible {
+  outline: 2px solid rgba(255, 231, 173, 0.8);
+  outline-offset: -8px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: #efe8d8;
+  background: rgba(18, 18, 18, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.controls button,
+.controls input {
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f6f0e4;
+  background: rgba(255, 255, 255, 0.08);
+  font: 14px "Microsoft YaHei", sans-serif;
+}
+
+.controls button {
+  min-width: 78px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 14px "Microsoft YaHei", sans-serif;
+}
+
+.controls input {
+  width: 76px;
+  padding: 0 8px;
+}
+
+.total {
+  color: rgba(246, 240, 228, 0.7);
+  font: 14px "Microsoft YaHei", sans-serif;
+}
+
+@media (max-width: 1020px) {
+  .book-shell {
+    position: relative;
+    display: block;
+    width: calc(100vw - 28px);
+    height: calc((100vw - 28px) * 600 / 960);
+  }
+
+  #book-zoom {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform-origin: center center;
+    transform: translate(-50%, -50%) scale(calc((100vw - 28px) / 960px));
+  }
+
+  .book-shell.is-ready #book-zoom {
+    transform: translate(-50%, -50%) scale(calc((100vw - 28px) / 960px));
+  }
+}
+
+@media (max-width: 620px) {
+  .stage {
+    padding-inline: 14px;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+  }
+}
