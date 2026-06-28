@@ -22,6 +22,8 @@ classic-reading-project/
 │   └── 素材清单.md
 ├── scripts/
 │   └── build_deliverables.py
+├── source-assets/
+│   └── discussion-raw/
 └── WebDemo/
     ├── package.json
     ├── index.html
@@ -29,9 +31,6 @@ classic-reading-project/
     │   ├── favicon.svg
     │   ├── reading-hero.png
     │   ├── red-motion-bg.mp4
-    │   ├── group-photo-1.jpg
-    │   ├── group-photo-2.jpg
-    │   ├── group-photo-3.jpg
     │   └── photos/
     └── src/
         ├── App.tsx
@@ -85,12 +84,12 @@ https://2711944586.github.io/mg/
 WebDemo 的“线下讨论”章节使用三张真实现场照片：
 
 ```text
-WebDemo/public/group-photo-1.jpg
-WebDemo/public/group-photo-2.jpg
-WebDemo/public/group-photo-3.jpg
+WebDemo/public/photos/discussion-reading.jpg
+WebDemo/public/photos/discussion-notes.jpg
+WebDemo/public/photos/discussion-review.jpg
 ```
 
-如需替换，保持文件名不变即可。建议三张照片分别对应“读原文”“辨问题”“定表达”，画面要自然、清晰、能看出真实讨论过程。
+如需替换，保持文件名不变即可。建议三张照片分别对应“读原文”“辨问题”“定表达”，画面要自然、清晰、能看出真实讨论过程。原始大图归档在 `source-assets/discussion-raw/`。
 
 ## 部署
 

@@ -288,21 +288,21 @@ const scenes: Scene[] = [
       type: 'discussion',
       slots: [
         {
-          image: 'group-photo-1.jpg',
+          image: 'photos/discussion-reading.jpg',
           fallback: 'photos/cuhk-reading-room.jpg',
           sceneLabel: '现场 01',
           title: '围坐读文本',
           note: '先把原文读顺，把关键词和课程主线对上',
         },
         {
-          image: 'group-photo-2.jpg',
+          image: 'photos/discussion-notes.jpg',
           fallback: 'photos/chinese-books-library.jpg',
           sceneLabel: '现场 02',
           title: '一起辨问题',
           note: '把“两个结合”和现实案例放在一起讨论',
         },
         {
-          image: 'group-photo-3.jpg',
+          image: 'photos/discussion-review.jpg',
           fallback: 'photos/national-library-hall.jpg',
           sceneLabel: '现场 03',
           title: '收束成表达',

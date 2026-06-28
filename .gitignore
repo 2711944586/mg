@@ -5,6 +5,7 @@ WebDemo/output/
 WebDemo/*.log
 WebDemo/*.err
 outputs/
+source-assets/discussion-raw/
 .cache/
 artifact-build-manifest.json
 *.tmp
