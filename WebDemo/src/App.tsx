@@ -709,6 +709,10 @@ function scenePageNumber(index: number) {
   return index * 2 + 2;
 }
 
+function shouldUseSinglePage() {
+  return window.matchMedia('(max-width: 680px)').matches;
+}
+
 function CoverPage() {
   return (
     <section className="page page--cover" aria-hidden="true">
@@ -794,13 +798,15 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
 
     const readSize = () => {
       const parentWidth = parent?.getBoundingClientRect().width ?? 1160;
-      const width = Math.round(Math.min(1160, Math.max(640, parentWidth)));
-      const height = Math.round(width / 1.78);
-      return { width, height };
+      const isSinglePage = shouldUseSinglePage();
+      const width = Math.round(Math.min(1160, Math.max(320, parentWidth)));
+      const height = Math.round(isSinglePage ? width * 1.28 : width / 1.78);
+      return { width, height, isSinglePage };
     };
 
     const applySize = () => {
       const size = readSize();
+      instance.turn('display', size.isSinglePage ? 'single' : 'double');
       instance.turn('size', size.width, size.height);
     };
 
@@ -809,7 +815,7 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
     instance.turn({
       page: scenePageNumber(initialScene),
       pages: scenes.length * 2 + 1,
-      display: 'double',
+      display: size.isSinglePage ? 'single' : 'double',
       gradients: true,
       acceleration: true,
       duration: turnDuration,
