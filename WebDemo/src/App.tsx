@@ -723,6 +723,8 @@ function CoverPage() {
 
 type FlipBookProps = {
   initialScene: number;
+  onReadyChange?: (isReady: boolean) => void;
+  onTurnSettled?: () => void;
 };
 
 function loadScript(src: string) {
@@ -746,7 +748,7 @@ function loadScript(src: string) {
 }
 
 const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBook(
-  { initialScene },
+  { initialScene, onReadyChange, onTurnSettled },
   ref,
 ) {
   const elementRef = useRef<HTMLDivElement>(null);
@@ -816,6 +818,7 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
     instance.turn('disable', true);
 
     turnRef.current = instance;
+    onReadyChange?.(true);
 
     let clearTurnTimer: number | null = null;
 
@@ -869,9 +872,14 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
       clearTurnTimer = window.setTimeout(clearTurnState, 90);
     };
 
+    const handleTurned = () => {
+      finishTurnState();
+      onTurnSettled?.();
+    };
+
     instance.on('turning', markTurnState);
     instance.on('start', markTurnState);
-    instance.on('turned', finishTurnState);
+    instance.on('turned', handleTurned);
     instance.on('end', finishTurnState);
 
     const observer = parent ? new ResizeObserver(applySize) : null;
@@ -889,8 +897,9 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
       }
       clearTurnState();
       turnRef.current = null;
+      onReadyChange?.(false);
     };
-  }, [initialScene, isPluginReady]);
+  }, [initialScene, isPluginReady, onReadyChange, onTurnSettled]);
 
   return (
     <div className="book-case" aria-label="翻书式章节演示">
@@ -913,24 +922,41 @@ function App() {
   const initialScene = useMemo(getInitialScene, []);
   const bookRef = useRef<FlipBookHandle>(null);
   const turnTimerRef = useRef<number | null>(null);
+  const pendingSceneRef = useRef<number | null>(null);
   const [activeScene, setActiveScene] = useState(initialScene);
   const [isPlaying, setIsPlaying] = useState(() => !new URLSearchParams(window.location.search).has('scene'));
   const [isTurning, setIsTurning] = useState(false);
+  const [isBookReady, setIsBookReady] = useState(false);
 
   const scene = scenes[activeScene];
 
+  const settleTurn = useCallback(() => {
+    const pendingScene = pendingSceneRef.current;
+    if (pendingScene === null) return;
+
+    if (turnTimerRef.current) {
+      window.clearTimeout(turnTimerRef.current);
+      turnTimerRef.current = null;
+    }
+    pendingSceneRef.current = null;
+    setActiveScene(pendingScene);
+    setIsTurning(false);
+  }, []);
+
   const goToScene = useCallback((index: number) => {
-    if (isTurning || index === activeScene || !bookRef.current) return;
+    if (isTurning || index === activeScene || !isBookReady || !bookRef.current) return;
     const didTurn = bookRef.current.goToScene(index);
-    if (!didTurn) return;
+    if (!didTurn) {
+      setActiveScene(index);
+      return;
+    }
+    pendingSceneRef.current = index;
     setIsTurning(true);
     if (turnTimerRef.current) window.clearTimeout(turnTimerRef.current);
     turnTimerRef.current = window.setTimeout(() => {
-      setActiveScene(index);
-      setIsTurning(false);
-      turnTimerRef.current = null;
-    }, turnDuration + 140);
-  }, [activeScene, isTurning]);
+      settleTurn();
+    }, turnDuration + 360);
+  }, [activeScene, isBookReady, isTurning, settleTurn]);
 
   useEffect(() => {
     const imageNames = new Set([
@@ -956,16 +982,17 @@ function App() {
   useEffect(() => {
     return () => {
       if (turnTimerRef.current) window.clearTimeout(turnTimerRef.current);
+      pendingSceneRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (!isPlaying || isTurning) return undefined;
+    if (!isPlaying || isTurning || !isBookReady) return undefined;
     const timer = window.setTimeout(() => {
       goToScene(nextIndex(activeScene));
     }, sceneDuration);
     return () => window.clearTimeout(timer);
-  }, [activeScene, goToScene, isPlaying, isTurning]);
+  }, [activeScene, goToScene, isBookReady, isPlaying, isTurning]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -1027,6 +1054,8 @@ function App() {
           <FlipBook
             ref={bookRef}
             initialScene={initialScene}
+            onReadyChange={setIsBookReady}
+            onTurnSettled={settleTurn}
           />
         </div>
 
@@ -1036,7 +1065,7 @@ function App() {
             <button
               type="button"
               onClick={() => goToScene(previousIndex(activeScene))}
-              disabled={isTurning}
+              disabled={!isBookReady || isTurning}
               aria-label="上一章"
             >
               上一章
@@ -1052,7 +1081,7 @@ function App() {
             <button
               type="button"
               onClick={() => goToScene(nextIndex(activeScene))}
-              disabled={isTurning}
+              disabled={!isBookReady || isTurning}
               aria-label="下一章"
             >
               下一章
@@ -1060,14 +1089,14 @@ function App() {
           </div>
         </footer>
 
-        <div className={isPlaying && !isTurning ? 'progress-track is-playing' : 'progress-track'} aria-hidden="true">
+        <div className={isPlaying && isBookReady && !isTurning ? 'progress-track is-playing' : 'progress-track'} aria-hidden="true">
           {scenes.map((item, index) => (
             <button
               type="button"
               key={item.chapter}
               className={index === activeScene ? 'is-active' : ''}
               onClick={() => goToScene(index)}
-              disabled={isTurning}
+              disabled={!isBookReady || isTurning}
               aria-label={`跳转到${item.chapter}`}
             >
               <span
