@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 
 type ImageVisual = {
   type: 'image';
@@ -106,13 +106,27 @@ type Scene = {
 };
 
 const sceneDuration = 10800;
-const flipDuration = 2050;
+const turnDuration = 1420;
 
-type TurnTransition = {
-  from: number;
-  to: number;
-  direction: 'next' | 'prev';
+type TurnInstance = {
+  turn: (...args: unknown[]) => unknown;
+  on: (...args: unknown[]) => TurnInstance;
+  off: (...args: unknown[]) => TurnInstance;
+  css: (...args: unknown[]) => TurnInstance;
 };
+
+type TurnJQuery = (element: HTMLElement | Window | Document | string) => TurnInstance;
+
+type FlipBookHandle = {
+  goToScene: (index: number) => boolean;
+};
+
+declare global {
+  interface Window {
+    jQuery?: TurnJQuery;
+    $?: TurnJQuery;
+  }
+}
 
 const scenes: Scene[] = [
   {
@@ -691,23 +705,174 @@ function VisualPage({ scene, className = '' }: { scene: Scene; className?: strin
   );
 }
 
+function scenePageNumber(index: number) {
+  return index * 2 + 2;
+}
+
+function CoverPage() {
+  return (
+    <section className="page page--cover" aria-hidden="true">
+      <div>
+        <p>经典品读</p>
+        <strong>守正创新</strong>
+        <span>在翻阅中回到问题，也回到时代现场</span>
+      </div>
+    </section>
+  );
+}
+
+type FlipBookProps = {
+  initialScene: number;
+};
+
+function loadScript(src: string) {
+  return new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (existing?.dataset.loaded === 'true') {
+      resolve();
+      return;
+    }
+
+    const script = existing ?? document.createElement('script');
+    script.src = src;
+    script.async = false;
+    script.onload = () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    };
+    script.onerror = () => reject(new Error(`Failed to load ${src}`));
+    if (!existing) document.head.appendChild(script);
+  });
+}
+
+const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBook(
+  { initialScene },
+  ref,
+) {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const turnRef = useRef<TurnInstance | null>(null);
+  const [isPluginReady, setIsPluginReady] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    goToScene(index: number) {
+      const instance = turnRef.current;
+      if (!instance) return false;
+      const page = scenePageNumber(index);
+      if (Number(instance.turn('page')) === page) return false;
+      instance.turn('page', page);
+      return true;
+    },
+  }), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const vendorBase = `${import.meta.env.BASE_URL}vendor/`;
+    loadScript(`${vendorBase}jquery-3.7.1.min.js`)
+      .then(() => loadScript(`${vendorBase}turn.min.js`))
+      .then(() => {
+        if (!cancelled) setIsPluginReady(true);
+      })
+      .catch(() => {
+        if (!cancelled) setIsPluginReady(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isPluginReady) return undefined;
+    const element = elementRef.current;
+    const turnFactory = window.jQuery ?? window.$;
+    if (!element || !turnFactory) return undefined;
+
+    const instance = turnFactory(element);
+    const parent = element.parentElement;
+
+    const readSize = () => {
+      const parentWidth = parent?.getBoundingClientRect().width ?? 1160;
+      const width = Math.round(Math.min(1160, Math.max(640, parentWidth)));
+      const height = Math.round(width / 1.78);
+      return { width, height };
+    };
+
+    const applySize = () => {
+      const size = readSize();
+      instance.turn('size', size.width, size.height);
+    };
+
+    const size = readSize();
+    instance.css({ width: size.width, height: size.height });
+    instance.turn({
+      page: scenePageNumber(initialScene),
+      pages: scenes.length * 2 + 1,
+      display: 'double',
+      gradients: true,
+      acceleration: false,
+      duration: turnDuration,
+      elevation: 92,
+    });
+    instance.turn('disable', true);
+
+    turnRef.current = instance;
+
+    const observer = parent ? new ResizeObserver(applySize) : null;
+    if (parent) observer?.observe(parent);
+    window.addEventListener('resize', applySize);
+
+    return () => {
+      window.removeEventListener('resize', applySize);
+      observer?.disconnect();
+      try {
+        instance.turn('disable', true);
+        instance.off('turning turned');
+      } catch {
+        // turn.js r3 has no destroy method; disabling is enough for this static mount.
+      }
+      turnRef.current = null;
+    };
+  }, [initialScene, isPluginReady]);
+
+  return (
+    <div className="book-case" aria-label="翻书式章节演示">
+      <div className="book-shadow" aria-hidden="true" />
+      <div className="page-stack page-stack--left" aria-hidden="true" />
+      <div className="page-stack page-stack--right" aria-hidden="true" />
+      <div ref={elementRef} className="book-shell turnjs-book">
+        <CoverPage />
+        {scenes.flatMap((item) => [
+          <TextPage key={`${item.chapter}-text`} scene={item} className="book-page book-page--text" />,
+          <VisualPage key={`${item.chapter}-visual`} scene={item} className="book-page book-page--visual" />,
+        ])}
+      </div>
+      <div className="book-spine" aria-hidden="true" />
+    </div>
+  );
+}));
+
 function App() {
-  const [activeScene, setActiveScene] = useState(getInitialScene);
+  const initialScene = useMemo(getInitialScene, []);
+  const bookRef = useRef<FlipBookHandle>(null);
+  const turnTimerRef = useRef<number | null>(null);
+  const [activeScene, setActiveScene] = useState(initialScene);
   const [isPlaying, setIsPlaying] = useState(() => !new URLSearchParams(window.location.search).has('scene'));
-  const [flipTick, setFlipTick] = useState(0);
-  const [transition, setTransition] = useState<TurnTransition | null>(null);
+  const [isTurning, setIsTurning] = useState(false);
 
   const scene = scenes[activeScene];
 
-  const goToScene = (index: number, nextDirection: 'next' | 'prev') => {
-    if (transition || index === activeScene) return;
-    setTransition({
-      from: activeScene,
-      to: index,
-      direction: nextDirection,
-    });
-    setFlipTick((tick) => tick + 1);
-  };
+  const goToScene = useCallback((index: number) => {
+    if (isTurning || index === activeScene || !bookRef.current) return;
+    const didTurn = bookRef.current.goToScene(index);
+    if (!didTurn) return;
+    setIsTurning(true);
+    if (turnTimerRef.current) window.clearTimeout(turnTimerRef.current);
+    turnTimerRef.current = window.setTimeout(() => {
+      setActiveScene(index);
+      setIsTurning(false);
+      turnTimerRef.current = null;
+    }, turnDuration + 140);
+  }, [activeScene, isTurning]);
 
   useEffect(() => {
     const imageNames = new Set([
@@ -731,29 +896,26 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!isPlaying || transition) return undefined;
-    const timer = window.setTimeout(() => {
-      goToScene(nextIndex(activeScene), 'next');
-    }, sceneDuration);
-    return () => window.clearTimeout(timer);
-  }, [activeScene, isPlaying, transition]);
+    return () => {
+      if (turnTimerRef.current) window.clearTimeout(turnTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!transition) return undefined;
+    if (!isPlaying || isTurning) return undefined;
     const timer = window.setTimeout(() => {
-      setActiveScene(transition.to);
-      setTransition(null);
-    }, flipDuration);
+      goToScene(nextIndex(activeScene));
+    }, sceneDuration);
     return () => window.clearTimeout(timer);
-  }, [transition]);
+  }, [activeScene, goToScene, isPlaying, isTurning]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowRight') {
-        goToScene(nextIndex(activeScene), 'next');
+        goToScene(nextIndex(activeScene));
       }
       if (event.key === 'ArrowLeft') {
-        goToScene(previousIndex(activeScene), 'prev');
+        goToScene(previousIndex(activeScene));
       }
       if (event.key === ' ') {
         event.preventDefault();
@@ -763,25 +925,11 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeScene, transition]);
+  }, [activeScene, goToScene]);
 
   const progressLabel = useMemo(() => {
     return `${activeScene + 1} / ${scenes.length}`;
   }, [activeScene]);
-
-  const turnScene = transition ? scenes[transition.from] : scene;
-  const incomingScene = transition ? scenes[transition.to] : null;
-  const turnDirection = transition?.direction ?? 'next';
-  const currentTextClass = transition
-    ? turnDirection === 'prev'
-      ? 'page--turning-source page--turning-text'
-      : 'page--outgoing-passive page--outgoing-text'
-    : '';
-  const currentVisualClass = transition
-    ? turnDirection === 'next'
-      ? 'page--turning-source page--turning-visual'
-      : 'page--outgoing-passive page--outgoing-visual'
-    : '';
 
   return (
     <main className="showcase" aria-label="守正创新经典品读自动演示">
@@ -818,68 +966,21 @@ function App() {
         </header>
 
         <div className="book-stage">
-          <div
-            className={transition ? `book-shell is-turning is-turning--${turnDirection}` : 'book-shell'}
-            aria-label={`${scene.chapter} ${scene.title}`}
-          >
-            <div className="book-shadow" aria-hidden="true" />
-            <div className="page-stack page-stack--left" aria-hidden="true" />
-            <div className="page-stack page-stack--right" aria-hidden="true" />
-            {incomingScene && (
-              <>
-                <TextPage
-                  key={`incoming-text-${flipTick}-${transition?.to ?? activeScene}`}
-                  scene={incomingScene}
-                  className={`page--incoming page--incoming-text page--incoming-${turnDirection}`}
-                />
-                <VisualPage
-                  key={`incoming-visual-${flipTick}-${transition?.to ?? activeScene}`}
-                  scene={incomingScene}
-                  className={`page--incoming page--incoming-visual page--incoming-${turnDirection}`}
-                />
-              </>
-            )}
-            <TextPage
-              key={`text-${activeScene}`}
-              scene={scene}
-              className={currentTextClass}
-            />
-            <VisualPage
-              key={`visual-${activeScene}`}
-              scene={scene}
-              className={currentVisualClass}
-            />
-            <div className="book-spine" aria-hidden="true" />
-            {transition && (
-              <>
-                <div
-                  key={`${flipTick}-${transition.from}-${transition.to}`}
-                  className={`turn-sheet turn-sheet--${turnDirection}`}
-                  style={{ '--turn-image': `url("${asset(turnScene.turnImage)}")` } as React.CSSProperties}
-                  aria-hidden="true"
-                >
-                  <span className="turn-sheet__image" />
-                  <span className="turn-sheet__back" />
-                  <span className="turn-sheet__shade" />
-                  <span className="turn-sheet__fold" />
-                  <span className="turn-sheet__corner" />
-                  <span className="turn-sheet__edge" />
-                  <span className="turn-sheet__glint" />
-                </div>
-                <div
-                  key={`settle-${flipTick}`}
-                  className={`book-settle book-settle--${turnDirection}`}
-                  aria-hidden="true"
-                />
-              </>
-            )}
-          </div>
+          <FlipBook
+            ref={bookRef}
+            initialScene={initialScene}
+          />
         </div>
 
         <footer className="stage__footer">
           <p className="narration">{scene.cue}</p>
           <div className="controls" aria-label="演示控制">
-            <button type="button" onClick={() => goToScene(previousIndex(activeScene), 'prev')} disabled={!!transition}>
+            <button
+              type="button"
+              onClick={() => goToScene(previousIndex(activeScene))}
+              disabled={isTurning}
+              aria-label="上一章"
+            >
               上一章
             </button>
             <button
@@ -890,20 +991,25 @@ function App() {
             >
               {isPlaying ? '停留' : '继续'}
             </button>
-            <button type="button" onClick={() => goToScene(nextIndex(activeScene), 'next')} disabled={!!transition}>
+            <button
+              type="button"
+              onClick={() => goToScene(nextIndex(activeScene))}
+              disabled={isTurning}
+              aria-label="下一章"
+            >
               下一章
             </button>
           </div>
         </footer>
 
-        <div className={isPlaying ? 'progress-track is-playing' : 'progress-track'} aria-hidden="true">
+        <div className={isPlaying && !isTurning ? 'progress-track is-playing' : 'progress-track'} aria-hidden="true">
           {scenes.map((item, index) => (
             <button
               type="button"
               key={item.chapter}
               className={index === activeScene ? 'is-active' : ''}
-              onClick={() => goToScene(index, index >= activeScene ? 'next' : 'prev')}
-              disabled={!!transition}
+              onClick={() => goToScene(index)}
+              disabled={isTurning}
               aria-label={`跳转到${item.chapter}`}
             >
               <span

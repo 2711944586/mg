@@ -22,8 +22,6 @@ classic-reading-project/
 │   └── 素材清单.md
 ├── scripts/
 │   └── build_deliverables.py
-├── source-assets/
-│   └── discussion-raw/
 └── WebDemo/
     ├── package.json
     ├── index.html
@@ -31,7 +29,8 @@ classic-reading-project/
     │   ├── favicon.svg
     │   ├── reading-hero.png
     │   ├── red-motion-bg.mp4
-    │   └── photos/
+    │   ├── photos/
+    │   └── vendor/
     └── src/
         ├── App.tsx
         ├── main.tsx
@@ -89,7 +88,19 @@ WebDemo/public/photos/discussion-notes.jpg
 WebDemo/public/photos/discussion-review.jpg
 ```
 
-如需替换，保持文件名不变即可。建议三张照片分别对应“读原文”“辨问题”“定表达”，画面要自然、清晰、能看出真实讨论过程。原始大图归档在 `source-assets/discussion-raw/`。
+如需替换，保持文件名不变即可。建议三张照片分别对应“读原文”“辨问题”“定表达”，画面要自然、清晰、能看出真实讨论过程。根目录不保留微信原图或临时图片。
+
+## 翻书插件
+
+WebDemo 已本地化接入 `turn.js`：
+
+```text
+WebDemo/public/vendor/jquery-3.7.1.min.js
+WebDemo/public/vendor/turn.min.js
+WebDemo/public/vendor/turnjs-license.txt
+```
+
+应用运行时会从 `/vendor/` 顺序加载 jQuery 和 `turn.js`，不依赖外部 CDN，适合 GitHub Pages 静态部署。
 
 ## 部署
 
@@ -130,5 +141,5 @@ WebDemo/public/photos/discussion-review.jpg
 
 - WebDemo：红色动态背景、真实图片、自动翻书、线下讨论板块、静态部署。
 - 字体：标题使用宋楷气质字体栈，正文使用更像纸本文稿的中文阅读字体栈。
-- 动画：翻页使用 `transform` 和 `opacity` 为主，减少重绘型动画。
+- 动画：翻页由本地 `turn.js` 插件驱动，按钮和自动播放负责章节节奏。
 - 文件：交付物在 `deliverables/`，过程文档在 `docs/`，WebDemo 源码和素材在 `WebDemo/`。
