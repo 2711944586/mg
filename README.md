@@ -95,13 +95,13 @@ WebDemo/public/photos/discussion-review.jpg
 WebDemo 已本地化接入 `turn.js`：
 
 ```text
-WebDemo/public/vendor/jquery-3.7.1.min.js
+WebDemo/public/vendor/jquery-1.7.1.min.js
 WebDemo/public/vendor/turn.js
 WebDemo/public/vendor/turn.min.js
 WebDemo/public/vendor/turnjs-license.txt
 ```
 
-应用运行时会从 `/vendor/` 顺序加载 jQuery 和官方 `turn.js` 文件，不依赖外部 CDN，适合 GitHub Pages 静态部署。翻页动画由插件原生 `display: "double"`、`gradients`、`acceleration`、`elevation` 驱动；样式层只负责书页质感和舞台排版，避免覆盖插件生成的折页层。
+应用运行时会从 `/vendor/` 顺序加载官方示例同款 jQuery 1.7.1 和 `turn.js` 文件，不依赖外部 CDN，适合 GitHub Pages 静态部署。翻页动画由插件原生 `display: "double"`、`gradients`、`acceleration`、`elevation`、`next`、`previous` 驱动；样式层只负责书页质感和舞台排版，不覆盖插件生成的折页层。
 
 ## 部署
 
