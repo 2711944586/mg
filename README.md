@@ -96,11 +96,12 @@ WebDemo 已本地化接入 `turn.js`：
 
 ```text
 WebDemo/public/vendor/jquery-3.7.1.min.js
+WebDemo/public/vendor/turn.js
 WebDemo/public/vendor/turn.min.js
 WebDemo/public/vendor/turnjs-license.txt
 ```
 
-应用运行时会从 `/vendor/` 顺序加载 jQuery 和 `turn.js`，不依赖外部 CDN，适合 GitHub Pages 静态部署。
+应用运行时会从 `/vendor/` 顺序加载 jQuery 和官方 `turn.js` 文件，不依赖外部 CDN，适合 GitHub Pages 静态部署。翻页动画由插件原生 `display: "double"`、`gradients`、`acceleration`、`elevation` 驱动；样式层只负责书页质感和舞台排版，避免覆盖插件生成的折页层。
 
 ## 部署
 
@@ -141,5 +142,5 @@ WebDemo/public/vendor/turnjs-license.txt
 
 - WebDemo：红色动态背景、真实图片、自动翻书、线下讨论板块、静态部署。
 - 字体：标题使用宋楷气质字体栈，正文使用更像纸本文稿的中文阅读字体栈。
-- 动画：翻页由本地 `turn.js` 插件驱动，按钮和自动播放负责章节节奏。
+- 动画：翻页由本地官方 `turn.js` 插件驱动，按钮、方向键和自动播放负责章节节奏；桌面端和移动端均已验证上一章/下一章可用。
 - 文件：交付物在 `deliverables/`，过程文档在 `docs/`，WebDemo 源码和素材在 `WebDemo/`。

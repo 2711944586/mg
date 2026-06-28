@@ -106,7 +106,7 @@ type Scene = {
 };
 
 const sceneDuration = 10800;
-const turnDuration = 1380;
+const turnDuration = 900;
 
 type TurnInstance = {
   turn: (...args: unknown[]) => unknown;
@@ -728,7 +728,7 @@ function CoverPage() {
 type FlipBookProps = {
   initialScene: number;
   onReadyChange?: (isReady: boolean) => void;
-  onTurnSettled?: () => void;
+  onTurnSettled?: (sceneIndex: number) => void;
 };
 
 function loadScript(src: string) {
@@ -751,12 +751,40 @@ function loadScript(src: string) {
   });
 }
 
+function sceneIndexFromPage(page: number) {
+  return Math.max(0, Math.min(scenes.length - 1, Math.floor((page - 2) / 2)));
+}
+
+function resetTurnGeneratedDom(element: HTMLElement) {
+  element.querySelectorAll('.turn-page-wrapper, [id="turn-fwrappers"]').forEach((node) => {
+    const wrapper = node as HTMLElement;
+    const page = wrapper.querySelector<HTMLElement>('.book-page, .page--cover');
+    if (page) element.appendChild(page);
+    wrapper.remove();
+  });
+
+  element.querySelectorAll<HTMLElement>(':scope > div[style*="pointer-events: none"]').forEach((wrapper) => {
+    wrapper.remove();
+  });
+
+  element.querySelectorAll<HTMLElement>('.turn-page, .p-temporal').forEach((page) => {
+    page.classList.remove('turn-page', 'p-temporal');
+    Array.from(page.classList).forEach((className) => {
+      if (/^p\d+$/.test(className)) page.classList.remove(className);
+    });
+    page.removeAttribute('style');
+  });
+
+  element.removeAttribute('style');
+}
+
 const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBook(
   { initialScene, onReadyChange, onTurnSettled },
   ref,
 ) {
   const elementRef = useRef<HTMLDivElement>(null);
   const turnRef = useRef<TurnInstance | null>(null);
+  const isInitializingRef = useRef(true);
   const [isPluginReady, setIsPluginReady] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -793,8 +821,12 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
     const turnFactory = window.jQuery ?? window.$;
     if (!element || !turnFactory) return undefined;
 
+    resetTurnGeneratedDom(element);
     const instance = turnFactory(element);
     const parent = element.parentElement;
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+    let clearTurnTimer: number | null = null;
+    let turnStartedAt = 0;
 
     const readSize = () => {
       const parentWidth = parent?.getBoundingClientRect().width ?? 1160;
@@ -812,21 +844,6 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
 
     const size = readSize();
     instance.css({ width: size.width, height: size.height });
-    instance.turn({
-      page: scenePageNumber(initialScene),
-      pages: scenes.length * 2 + 1,
-      display: size.isSinglePage ? 'single' : 'double',
-      gradients: true,
-      acceleration: true,
-      duration: turnDuration,
-      elevation: 36,
-    });
-    instance.turn('disable', true);
-
-    turnRef.current = instance;
-    onReadyChange?.(true);
-
-    let clearTurnTimer: number | null = null;
 
     const clearTurnState = () => {
       if (clearTurnTimer) {
@@ -836,16 +853,20 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
       element.classList.remove('is-turning', 'is-turning-forward', 'is-turning-backward');
     };
 
-    const markTurnState = (_event: unknown, target?: unknown) => {
+    const markTurnState = (_event: unknown, pageOrView?: unknown, maybeView?: unknown) => {
+      if (isInitializingRef.current) return;
       if (clearTurnTimer) {
         window.clearTimeout(clearTurnTimer);
         clearTurnTimer = null;
       }
+      turnStartedAt = performance.now();
 
       const currentPage = Number(instance.turn('page'));
-      const nextPage = typeof target === 'object' && target !== null && 'next' in target
-        ? Number((target as { next?: unknown }).next)
-        : Number(target);
+      const nextPage = Array.isArray(maybeView)
+        ? Number(pageOrView)
+        : typeof pageOrView === 'object' && pageOrView !== null && 'next' in pageOrView
+          ? Number((pageOrView as { next?: unknown }).next)
+          : Number(pageOrView);
       const isBackward = Number.isFinite(nextPage) && nextPage < currentPage;
 
       element.classList.remove('is-turning-forward', 'is-turning-backward');
@@ -853,18 +874,38 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
     };
 
     const finishTurnState = () => {
-      clearTurnTimer = window.setTimeout(clearTurnState, 90);
+      const elapsed = turnStartedAt ? performance.now() - turnStartedAt : turnDuration;
+      const remaining = Math.max(120, turnDuration + 120 - elapsed);
+      clearTurnTimer = window.setTimeout(clearTurnState, remaining);
     };
 
-    const handleTurned = () => {
+    const handleTurned = (_event: unknown, page?: unknown) => {
+      if (isInitializingRef.current) return;
       finishTurnState();
-      onTurnSettled?.();
+      const fallbackPage = typeof page === 'number' ? page : Number(instance.turn('page'));
+      const settledScene = sceneIndexFromPage(fallbackPage);
+      onTurnSettled?.(settledScene);
     };
 
-    instance.on('turning', markTurnState);
-    instance.on('start', markTurnState);
-    instance.on('turned', handleTurned);
-    instance.on('end', finishTurnState);
+    instance.turn({
+      page: scenePageNumber(initialScene),
+      pages: scenes.length * 2 + 1,
+      display: size.isSinglePage ? 'single' : 'double',
+      gradients: !isTouchDevice,
+      acceleration: true,
+      duration: turnDuration,
+      elevation: 50,
+      when: {
+        turning: markTurnState,
+        start: markTurnState,
+        turned: handleTurned,
+        end: finishTurnState,
+      },
+    });
+
+    turnRef.current = instance;
+    isInitializingRef.current = false;
+    onReadyChange?.(true);
 
     const observer = parent ? new ResizeObserver(applySize) : null;
     if (parent) observer?.observe(parent);
@@ -874,13 +915,14 @@ const FlipBook = memo(forwardRef<FlipBookHandle, FlipBookProps>(function FlipBoo
       window.removeEventListener('resize', applySize);
       observer?.disconnect();
       try {
-        instance.turn('disable', true);
         instance.off('turning start turned end');
       } catch {
         // turn.js r3 has no destroy method; disabling is enough for this static mount.
       }
+      resetTurnGeneratedDom(element);
       clearTurnState();
       turnRef.current = null;
+      isInitializingRef.current = true;
       onReadyChange?.(false);
     };
   }, [initialScene, isPluginReady, onReadyChange, onTurnSettled]);
@@ -914,23 +956,26 @@ function App() {
 
   const scene = scenes[activeScene];
 
-  const settleTurn = useCallback(() => {
-    const pendingScene = pendingSceneRef.current;
-    if (pendingScene === null) return;
-
+  const settleTurn = useCallback((sceneIndex: number) => {
     if (turnTimerRef.current) {
       window.clearTimeout(turnTimerRef.current);
       turnTimerRef.current = null;
     }
     pendingSceneRef.current = null;
-    setActiveScene(pendingScene);
+    setActiveScene(sceneIndex);
     setIsTurning(false);
   }, []);
+
+  const handleBookSettled = useCallback((sceneIndex: number) => {
+    if (pendingSceneRef.current !== null && turnTimerRef.current !== null) return;
+    settleTurn(sceneIndex);
+  }, [settleTurn]);
 
   const goToScene = useCallback((index: number) => {
     if (isTurning || index === activeScene || !isBookReady || !bookRef.current) return;
     const didTurn = bookRef.current.goToScene(index);
     if (!didTurn) {
+      pendingSceneRef.current = null;
       setActiveScene(index);
       return;
     }
@@ -938,8 +983,8 @@ function App() {
     setIsTurning(true);
     if (turnTimerRef.current) window.clearTimeout(turnTimerRef.current);
     turnTimerRef.current = window.setTimeout(() => {
-      settleTurn();
-    }, turnDuration + 360);
+      settleTurn(pendingSceneRef.current ?? index);
+    }, turnDuration + 220);
   }, [activeScene, isBookReady, isTurning, settleTurn]);
 
   useEffect(() => {
@@ -1039,7 +1084,7 @@ function App() {
             ref={bookRef}
             initialScene={initialScene}
             onReadyChange={setIsBookReady}
-            onTurnSettled={settleTurn}
+            onTurnSettled={handleBookSettled}
           />
         </div>
 

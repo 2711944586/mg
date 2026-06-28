@@ -353,7 +353,7 @@ button:focus-visible {
   margin: 0 auto;
   display: grid;
   place-items: center;
-  pointer-events: none;
+  pointer-events: auto;
   overflow: visible;
 }
 
@@ -362,7 +362,7 @@ button:focus-visible {
   width: min(1160px, calc(100vw - 4.5rem), calc((100dvh - 14.6rem) * 1.78));
   aspect-ratio: 1.78 / 1;
   perspective: 2100px;
-  pointer-events: none;
+  pointer-events: auto;
   transform: translateZ(0);
 }
 
@@ -408,7 +408,11 @@ button:focus-visible {
   height: 100%;
   overflow: visible !important;
   filter: drop-shadow(0 1.1rem 2.4rem rgba(20, 4, 2, 0.24));
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
 }
 
 .book-shell::before,
@@ -449,7 +453,7 @@ button:focus-visible {
 
 .turnjs-book .turn-page-wrapper {
   overflow: hidden;
-  pointer-events: none;
+  pointer-events: auto;
   isolation: isolate;
   background:
     radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.58), transparent 28%),
@@ -470,7 +474,7 @@ button:focus-visible {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: flat;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .turnjs-book .turn-page-wrapper[page]:nth-child(even) {
@@ -508,12 +512,6 @@ button:focus-visible {
     inset 0 18px 42px rgba(255, 255, 255, 0.12);
 }
 
-.turnjs-book > div[style*="pointer-events: none"] > div,
-.turnjs-book > div[style*="pointer-events: none"] > div > div {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
 .turnjs-book div[style*="background-image: -webkit-gradient"] {
   background-color: transparent;
 }
@@ -523,14 +521,17 @@ button:focus-visible {
   overflow: visible !important;
 }
 
-.turnjs-book.is-turning .turn-page-wrapper {
-  background-color: var(--paper-solid);
+.turnjs-book.is-turning {
+  cursor: grabbing;
 }
 
-.turnjs-book.is-turning .turn-page-wrapper:empty,
-.turnjs-book.is-turning .turn-page-wrapper:not(:has(.page)) {
-  background: transparent !important;
-  box-shadow: none !important;
+.turnjs-book.is-turning .turn-page-wrapper,
+.turnjs-book.is-turning .turn-page,
+.turnjs-book.is-turning div[style*="cursor: default"] {
+  background-color: var(--paper-solid) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(109, 34, 15, 0.14),
+    inset 0 18px 46px rgba(255, 255, 255, 0.16);
 }
 
 .book-shadow {
@@ -576,7 +577,6 @@ button:focus-visible {
   height: 100%;
   min-width: 0;
   color: var(--ink);
-  contain: layout paint;
   background-color: var(--paper-solid);
   background:
     radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.6), transparent 28%),
@@ -646,7 +646,7 @@ button:focus-visible {
   border-radius: 13px 5px 5px 13px;
   transform-origin: right center;
   transform: none;
-  padding: clamp(1.45rem, 2.18vw, 2.42rem) clamp(1.42rem, 2.28vw, 2.58rem) clamp(2.12rem, 3.18vw, 3.28rem);
+  padding: clamp(1.38rem, 2vw, 2.18rem) clamp(1.35rem, 2.08vw, 2.34rem) clamp(1.42rem, 2.25vw, 2.4rem);
 }
 
 .page--visual {
@@ -1560,12 +1560,13 @@ button:focus-visible {
   position: relative;
   z-index: 40;
   align-items: end;
-  min-height: 2.7rem;
+  min-height: 3.35rem;
+  padding-top: 0.25rem;
 }
 
 .narration {
   max-width: 63rem;
-  margin: 0;
+  margin: 0 0 0.12rem;
   color: var(--cream);
   font-size: clamp(1rem, 1.28vw, 1.22rem);
   line-height: 1.54;
